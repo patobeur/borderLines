@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { _scene } from '../functions/scenes.js';
 import { _cameras } from '../functions/cameras.js';
 import { _formulas } from '../functions/formulas.js';
+import { _wakeLock } from "../functions/wakeLock.js";
 import { TouchMe } from './TouchMe.js';
 export class Controls {
 	conslog = true;
@@ -73,6 +74,9 @@ export class Controls {
 		const detectedDevice = { touchEvent, ontouchstart, maxTouchPoints, isMousePointer };
 
 		console.table(detectedDevice);
+
+		// _waveLock.tryKeepScreenAlive(10);
+		_wakeLock.requestWakeLock();
 
 		return detectedDevice;
 	}

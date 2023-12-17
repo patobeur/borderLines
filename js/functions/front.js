@@ -1,4 +1,5 @@
 export const _front = {
+	id:new Number(0),
 	createDiv: function (params) {
 		let element = document.createElement(params.tag);
 		if (params.attributes) {
@@ -15,11 +16,19 @@ export const _front = {
 		}
 		return element;
 	},
-	addCss: function (string) {
-		let stringcss = string;
+	addCss(stringcss, styleid) {
 		let style = document.createElement("style");
 		style.textContent = stringcss;
-		style.id = "css";
+		style.id = "css_"+styleid;
 		document.getElementsByTagName("head")[0].appendChild(style);
 	},
+	sanitize: function (string) {
+		const map = {"&": "&amp;","<": "&lt;",">": "&gt;",'"': "&quot;","'": "&#x27;","./": "&#x2F;"};
+		const reg = /[&<>"'/]/gi;
+		return string.replace(reg, (match) => map[match]);
+	},
+	// rand: (min, max) => {return Math.floor(Math.random() * (max - min + 1) + min);},
+	// get_DegreeWithTwoPos: function (x, y, X, Y) { return (Math.atan2(Y - y, X - x) * 180) / Math.PI; },
+	// get_aleaPos: function () {return {x: this.rand(50, window.innerWidth - 50),y: this.rand(50, window.innerHeight - 50)}}
+
 };

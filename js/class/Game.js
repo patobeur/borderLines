@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { _console } from "../functions/console.js";
+import { _soleil } from "../functions/soleil.js";
 // class
 // later
 // import { LoadingManager } from "./mecanics/LoadingManager.js";
@@ -8,17 +10,22 @@ import { Controls } from "./Controls.js";
 // import { _Deck } from "./mecanics/deck.js";
 
 // functions
+import { _cubes } from "../functions/cubes.js";
 import { _cameras } from "../functions/cameras.js";
 import { _stats } from "../functions/stats.js";
 import { _scene } from "../functions/scenes.js";
 
 export class Game {
 	Controls = new Controls();
+	_previousREFRESH = null;
 	// later
 	// LoadingManager = new LoadingManager();
-	_previousREFRESH = null;
-	_deck = null;
+	// _deck = null;
+
+
+
 	init = () => {
+		_console.init();
 		_scene.init();
 		_stats.init()
 
@@ -29,7 +36,7 @@ export class Game {
 		// later
 		// this.LoadingManager.setScene(this._scene)
 		// this.LoadingManager.loadThemAll()
-
+		_cubes.add()
 		this.addEventsListeners();
 		this._START();
 	};
@@ -42,16 +49,15 @@ export class Game {
 			_scene.renderer.setSize(newWidth, newHeight);
 		});
 	};
-	checkControls = () => {
-		// console.log(this.Controls)
-		if (this.Controls.left) _scene.cube.position.x -= _scene.cube.speedRatio;
-		if (this.Controls.right) _scene.cube.position.x += _scene.cube.speedRatio;
-		if (this.Controls.up) _scene.cube.position.y += _scene.cube.speedRatio;
-		if (this.Controls.down) _scene.cube.position.y -= _scene.cube.speedRatio;
-		if (this.Controls.space) _scene.cube.position.z += _scene.cube.speedRatio;
-	};
 	_START() {
 		console.log("START");
+		console.log(_scene.scene.children.length)
+		let last = _scene.scene.children[_scene.scene.children.length-1].children[0]
+		_console.log('last.name',last.name)
+		_console.log(last.name,'castShadow',last.castShadow)
+		_console.log(last.name,'receiveShadow',last.receiveShadow)
+
+
 		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);
 		this._REFRESH();
 	}
@@ -70,12 +76,13 @@ export class Game {
 	_STEP = (timeElapsed) => {
 		timeElapsed = timeElapsed * 0.001;
 
-		_scene.cube.updt()
+_soleil.rotation()
 
 		_cameras.lookAtCenter(_scene.cube.position)
 		_cameras.followaAt(_scene.cube.position)
 		this.Controls._get_intersectionColorChange(_cameras.currentPack.camera)
-		this.checkControls();
+		_scene.cube.checkControls(this.Controls);
+		// _scene.cube.updt()
 		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);
 		// this.Controls.update()
 	};
