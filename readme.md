@@ -34,7 +34,3 @@ a lot of bugs as you can see !!!
             "nodemon": "^3.0.2"
         }
     }
-
-## thanks : 
-
-Dave Gray (https://www.youtube.com/@DaveGrayTeachesCode)
