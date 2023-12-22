@@ -4,6 +4,7 @@ export let _cameras = {
 	cameras:{},
 	counter:new Number(0),
 	currentPack:null,
+    idealLookAt:new THREE.Vector3(0,-10,-12),
 	//--------------------------
 	add: function (conf) {
 		let pack = {
@@ -14,6 +15,7 @@ export let _cameras = {
 			// position:(conf&&conf.position) ? conf.position : new THREE.Vector3(0,0,10),
 			position:new THREE.Vector3(0,0,10),
             lookAt:new THREE.Vector3(0,0,0),
+            idealLookAt:this.idealLookAt,
             velocity: new THREE.Vector3(0,0,0),
             limits: new THREE.Vector3(50,50,50),
             speed:0.5
@@ -27,7 +29,8 @@ export let _cameras = {
 		this.id++
 		this.counter++
 		if(this.currentPack===null) this.currentPack = pack;
-        this.lookAtCenter(this.currentPack.lookAt)
+        this.lookAtCenter()
+        this.followaAt(this.currentPack.lookAt)
 	},
 	lookAtCenter:function(vector3=false){
         let center = vector3 ? vector3 : new THREE.Vector3(0,0,0);
@@ -35,7 +38,7 @@ export let _cameras = {
         this.currentPack.camera.updateProjectionMatrix();
 	},
 	followaAt:function(vector3=false){
-		this.currentPack.camera.position.set(vector3.x,vector3.y,vector3.z).add(this.currentPack.position)
+		this.currentPack.camera.position.set(vector3.x,vector3.y,vector3.z).add(this.currentPack.position).add(this.currentPack.idealLookAt)
 	},
     // updateCameraPositionAndLookAt(obj) {
     //     // Ajuster la position de la caméra pour suivre un object

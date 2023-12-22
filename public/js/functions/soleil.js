@@ -3,7 +3,7 @@ import { _scene } from "./scenes.js";
 export let _soleil = {
 	sun:null,
 	sunGroupe:null,
-	floorSize:null,
+	floorSize:new THREE.Vector3(11,11,.1),
 	config: {
 		name: 'soleil',
 		color: 0xffffff,
@@ -60,33 +60,20 @@ export let _soleil = {
 		this.sun.castShadow = true;
 		this.sun.receiveShadow = false;
 
-		
-		
 		// Add helper for the shadow camera
 		// const helper = new THREE.CameraHelper(this.sun.shadow.camera);
 		// this.scene.add(helper);
 		
-
-		
-		console.log('__________________________________________________________')
-		
-		console.log('this.groupe.position', this.groupe.position)
-		console.log('this.sun.position', this.sun.position)
-
 		_scene.scene.add(this.groupe);
 
 	},
 	rotation(centerV3=(0,0,0)) {
-
-		var center = new THREE.Vector3(centerV3)
-	
+		var center = new THREE.Vector3(centerV3)	
 		var relative = new THREE.Vector3(
 			this.groupe.position.x - center.x,
 			this.groupe.position.y - center.y,
 			this.groupe.position.z - center.z
 		);
-	
-
 		var newPos = new THREE.Vector3(
 			relative.x * Math.cos(this.config.rotationSpeed) - relative.z * Math.sin(this.config.rotationSpeed),
 			relative.y * Math.cos(this.config.rotationSpeed) + relative.x * Math.sin(this.config.rotationSpeed),

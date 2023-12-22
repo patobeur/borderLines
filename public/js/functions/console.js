@@ -1,4 +1,6 @@
+import { _fullscreen } from "./fullscreen.js";
 import { _front } from "./front.js";
+import { _wakeLock } from "./wakeLock.js";
 export const _console = {
 	cookieName: 'consoleCurrentSize',
 	maxMessage: 20,
@@ -7,7 +9,7 @@ export const _console = {
 	messages: {},
 	consoleDiv: null,
 	optionsDiv: null,
-	emojis: ['💬', '👁️‍🗨️', '⬜', '◻️', '◽', '👁️'],
+	emojis: ['💬', '👁️‍🗨️', '⬜', '◻️', '◽', '👁️','🆗'],
 	sizes: [
 		{ t: 'small', em: '👁️' },
 		{ t: 'normal', em: '👁️' },
@@ -53,7 +55,8 @@ export const _console = {
 			attributes: {
 				id: 'consoleOption1',
 				className: 'option ',
-				textContent: this.emojis[1]
+				textContent: this.emojis[1],
+				title: 'change size'
 			},
 		})
 		this.options2 = _front.createDiv({
@@ -61,7 +64,17 @@ export const _console = {
 			attributes: {
 				id: 'consoleOption2',
 				className: 'option',
-				textContent: this.emojis[0]
+				textContent: this.emojis[0],
+				title: 'full screen'
+			},
+		})
+		this.options3 = _front.createDiv({
+			tag: 'div',
+			attributes: {
+				id: 'consoleOption3',
+				className: 'option',
+				textContent: this.emojis[6],
+				title: 'minimize console'
 			},
 		})
 		this.messagesDiv = _front.createDiv({
@@ -82,17 +95,26 @@ export const _console = {
 		this.messagesDiv.appendChild(this.scrollerDiv)
 		this.optionsDiv.appendChild(this.options1)
 		this.optionsDiv.appendChild(this.options2)
+		this.optionsDiv.appendChild(this.options3)
 		this.consoleDiv.appendChild(this.optionsDiv)
 		this.consoleDiv.appendChild(this.messagesDiv)
 		// -------------------------------------------------
 		this.options1.addEventListener('click', () => {
 			this.changeSize()
 		})
+		this.options2.addEventListener('click', () => {
+			_fullscreen.goFull()
+		})
+		this.options3.addEventListener('click', () => {
+			this.changeSize(true)
+		})
+		
 	},
-	changeSize: function () {
+	changeSize: function (size=false) {
 		let old = this.currentSize + 0;
-		this.currentSize = (this.currentSize + 1 > this.sizes.length - 1) ? 0 : this.currentSize + 1;
 
+		if(!size) this.currentSize = (this.currentSize + 1 > this.sizes.length - 1) ? 0 : this.currentSize + 1;
+		if(size) this.currentSize = 0
 
 		this.consoleDiv.classList.remove(this.sizes[old].t)
 		this.consoleDiv.classList.add(this.sizes[this.currentSize].t)

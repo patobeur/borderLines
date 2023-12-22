@@ -1,3 +1,4 @@
+import { _console } from "./console.js";
 export const _wakeLock = {
     tryKeepScreenAlive: (minutes) => {
         if ('navigator', navigator.wakeLock) {
@@ -12,8 +13,7 @@ export const _wakeLock = {
             const wakeLock = await navigator.wakeLock.request("screen");
         } catch (err) {
             // The wake lock request fails - usually system-related, such as low battery.
-
-            console.log(`${err.name}, ${err.message}`);
+            _console.log(`${err.name}, ${err.message}`);
         }
     }
 };
