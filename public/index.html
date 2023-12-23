@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>ChatUp2</title>
+		<title>MessUp</title>
 		<link rel="stylesheet" href="style.css">
 
 		<script type="importmap">{
@@ -24,22 +24,21 @@
 	<body>
 		<main class="chat-container">
 
-			<div class="header-container" data-type="ok">ChatUp !</div>
+			<div class="header-container" data-type="ok">MessUp !</div>
 
 			<div id="join-container" class="join-container">
 
 				<form id="formjoin" class="form-join">
-					<input id="name" value="AliceBob" type="texte" maxlength="8" placeholder="Nom de scene" size="5" required
-						class="mess mess-name" data-type="name">
-					<input id="room" value="AAAA" type="texte" maxlength="8" placeholder="Chat room" size="5" required
-						class="mess mess-room" data-type="room">
-					<button id="join" type="submit" class="mess mess-what" data-type="what">Join</button>
+					<input id="name" value="AliceBob" type="texte" maxlength="8" placeholder="Nom de scene" size="5" required class="mess mess-name" data-type="name">
+					<!-- <input id="room" value="AAAA" type="texte" maxlength="8" placeholder="Chat room" size="5" required
+						class="mess mess-room" data-type="room"> -->
+						<button id="join" type="submit" class="mess mess-what" data-type="what">Join Room A</button>
+						<!-- <button id="joinb" type="submit" class="mess mess-what" data-type="what">Join B</button>
+						<button id="joinc" type="submit" class="mess mess-what" data-type="what">Join C</button> -->
 				</form>
 
 			</div>
 
-			<div id="userscontainer" class="user-container"></div>
-			<div id="roomscontainer" class="room-container"></div>
 			<div id="messagecontainer" class="message-container"></div>
 
 			<div class="sender-container">
@@ -52,6 +51,8 @@
 			</div>
 			<div id="activity" class="activity-container"></div>
 		</main>
+		<div id="userscontainer" class="user-container"></div>
+		<div id="roomscontainer" class="room-container"></div>
 		<svg id="target" width="0px" height="0px" viewBox="0 0 24 24" fill="none"
 		  xmlns="http://www.w3.org/2000/svg" transform="rotate(45)">
 			<path

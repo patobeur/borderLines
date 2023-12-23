@@ -4,6 +4,8 @@
     npm start
     npm run dev (for nodemon)
 
+    then right click on index.html to open with "Live Server"
+
 ## bugs
 
 a lot of bugs as you can see !!!

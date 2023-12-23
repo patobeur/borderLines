@@ -24,8 +24,8 @@ export class Game {
 
 
 	addPlayerCube= (datas)=>{
-		console.log(' wtf addcube')
-		_scene._setplayer()
+		// console.log(' wtf addcube')
+		if(_scene.cube===null) _scene._setplayer()
 	}
 	init = () => {
 		console.log(VRButton)

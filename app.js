@@ -28,7 +28,8 @@ const io = new Server(expressServer, {
 })
 io.on('connection', socket => {
 	console.log(`User ${socket.id} connected`)
-
+	console.log(UsersState.getAllActiveRooms())
+	
 	// Upon connection - only to user 
 	socket.emit('message', UsersState.buildMsg(ADMIN, "Welcome to Chat App!"))
 
@@ -39,12 +40,17 @@ io.on('connection', socket => {
 
 		if (prevRoom) {
 			socket.leave(prevRoom)
-			io.to(prevRoom).emit('message', UsersState.buildMsg(ADMIN, `${name} has left the room`))
+			io.to(prevRoom).emit(
+				'message', 
+				UsersState.buildMsg(
+					ADMIN, 
+					`${name} has left the room`
+				)
+			)
 		}
 
 		const user = UsersState.activateUser(socket.id, name, room)
 
-		// Cannot update previous room users list until after the state update in activate user 
 		if (prevRoom) {
 			io.to(prevRoom).emit('userList', {
 				users: UsersState.getUsersInRoom(prevRoom)
@@ -57,6 +63,13 @@ io.on('connection', socket => {
 		// To user who joined 
 		socket.emit('message', UsersState.buildMsg(ADMIN, `You have joined the ${user.room} chat room`))
 
+
+		// send Welcome Paquet message
+		socket.emit('welcome', {
+			user:user,
+			users: UsersState.getUsersInRoom(user.room)
+		})
+		
 		// To everyone else 
 		socket.broadcast.to(user.room).emit('message', UsersState.buildMsg(ADMIN, `${user.name} has joined the room`))
 
