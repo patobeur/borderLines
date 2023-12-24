@@ -16,7 +16,7 @@ a lot of bugs as you can see !!!
 ### packages
     
     {
-        "name": "borderlines",
+        "name": "messup",
         "version": "1.0.0",
         "description": "",
         "main": "server.js",
@@ -37,6 +37,17 @@ a lot of bugs as you can see !!!
         }
     }
 
+### Front imports
+    <script type="importmap">{
+        "imports": {
+            "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.159.0/examples/jsm/"
+    }}
+    </script>
 
-One version before :
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js" crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
+
+### One version before
+
 https://github.com/Penflam/borderLines

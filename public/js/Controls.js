@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { _scene } from '../functions/scenes.js';
-import { _cameras } from '../functions/cameras.js';
-import { _formulas } from '../functions/formulas.js';
-import { _wakeLock } from "../functions/wakeLock.js";
+import { _scene } from './scenes.js';
+import { _cameras } from './cameras.js';
+import { _formulas } from './formulas.js';
+import { _wakeLock } from "./wakeLock.js";
 import { TouchMe } from './TouchMe.js';
 export class Controls {
 	conslog = true;
@@ -11,7 +11,8 @@ export class Controls {
 	_preventDefaultRightClick = false; // dev mod
 	_TouchM;
 	_touchDeviceActive;
-	constructor() {
+	constructor(cb) {
+		this.cb=cb
 		// this.conslog = GameConfig.conslog
 		this._initProperties();
 		this._setupDeviceControls();

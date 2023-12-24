@@ -1,4 +1,4 @@
-import { _formulas } from "../functions/formulas.js";
+import { _formulas } from "./formulas.js";
 class TouchMe {
 	order = 0;
 	_touchZone;

@@ -26,66 +26,87 @@ const io = new Server(expressServer, {
 		]
 	}
 })
-io.on('connection', socket => {
-	console.log(`User ${socket.id} connected`)
-	console.log(UsersState.getAllActiveRooms())
-	
-	// Upon connection - only to user 
-	socket.emit('message', UsersState.buildMsg(ADMIN, "Welcome to Chat App!"))
-
-	socket.on('enterRoom', ({ name, room }) => {
-
-		// leave previous room 
-		const prevRoom = UsersState.getUser(socket.id)?.room
-
-		if (prevRoom) {
-			socket.leave(prevRoom)
-			io.to(prevRoom).emit(
+let socketing = {
+	user:null,
+	prevRoom:false,
+	leaveRoom:function (name){
+		if (this.prevRoom) {
+			socket.leave(this.prevRoom)
+			io.to(this.prevRoom).emit(
 				'message', 
 				UsersState.buildMsg(
 					ADMIN, 
 					`${name} has left the room`
 				)
 			)
+			this.updatePrevRoomUserList()
 		}
+	},
+	updatePrevRoomUserList:function (){
+		io.to(this.prevRoom).emit('userList', {
+			users: UsersState.getUsersInRoom(this.prevRoom)
+		})
+	},
+	init:function (socket){
+		console.log(`User ${socket.id} connected`)
+		console.log('AllActiveRooms',UsersState.getAllActiveRooms())
+		console.log('Users',UsersState.getUsers(socket.id))
 
-		const user = UsersState.activateUser(socket.id, name, room)
+		socket.emit(
+			'message',
+			UsersState.buildMsg(
+				ADMIN,
+				"Welcome to Chat App!"
+			)
+		)
+	},
+}
+io.on('connection', (socket) => {
+	socketing.init(socket)
+	// Upon connection - only to user 
 
-		if (prevRoom) {
-			io.to(prevRoom).emit('userList', {
-				users: UsersState.getUsersInRoom(prevRoom)
-			})
-		}
+	socket.on('enterRoom', ({ name, room }) => {
+
+		// leave previous room 
+		socketing.prevRoom = UsersState.getUser(socket.id)?.room
+		if (socketing.prevRoom) this.leave()
+
+		socketing.user = UsersState.activateUser(socket.id, name, room)
 
 		// join room 
-		socket.join(user.room)
-
+		socket.join(socketing.user.room)
+		
 		// To user who joined 
-		socket.emit('message', UsersState.buildMsg(ADMIN, `You have joined the ${user.room} chat room`))
-
+		socket.emit('message', UsersState.buildMsg(ADMIN, `You have joined the ${socketing.user.room} chat room`))
 
 		// send Welcome Paquet message
 		socket.emit('welcome', {
-			user:user,
-			users: UsersState.getUsersInRoom(user.room)
+			user:socketing.user,
+			users:UsersState.getUsersInRoom(socketing.user.room)
 		})
 		
 		// To everyone else 
-		socket.broadcast.to(user.room).emit('message', UsersState.buildMsg(ADMIN, `${user.name} has joined the room`))
+		socket.broadcast.to(socketing.user.room).emit('message', UsersState.buildMsg(ADMIN, `${socketing.user.name} has joined the room`))
 
 		// Update user list for room 
-		io.to(user.room).emit('userList', {
-			users: UsersState.getUsersInRoom(user.room)
+		io.to(socketing.user.room).emit('userList', {
+			users: UsersState.getUsersInRoom(socketing.user.room)
 		})
 
 		// Update rooms list for everyone 
 		io.emit('roomList', {
 			rooms: UsersState.getAllActiveRooms()
 		})
-		// Update rooms list for everyone 
-		io.to(user.room).emit('addPlayer', {
+		// Update rooms list for everyone in the room
+		io.to(socketing.user.room).emit('addPlayer', {
 			rooms: UsersState.getAllActiveRooms()
 		})
+	})
+
+	// newuserposition
+	socket.on('newuserposition', (data) => {
+		const pos = {x:data.pos.x,y:data.pos.y,z:data.pos.z}
+		UsersState.setUserPos(socket.id,pos)
 	})
 
 	// When user disconnects - to all others 

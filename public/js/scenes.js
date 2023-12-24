@@ -52,7 +52,7 @@ export let _scene = {
 				this.renderer.setSize(window.innerWidth, window.innerHeight);
 				this.renderer.setPixelRatio(devicePixelRatio);
 				this.renderer.setClearColor(0xaaaaaa);
-				console.log(this.renderer)
+				console.log('renderer ok')
 				document.body.appendChild(this.renderer.domElement);
 			},
 			// player: () => {
@@ -128,8 +128,7 @@ export let _scene = {
 			},
 			cameras: () => {
 				_cameras.init();
-				console.log(this.scene)
-				console.log('camera',_cameras.currentPack.groupe)
+				console.log('cameras ok (matrixed and rendered')
 				_cameras.currentPack.camera.updateProjectionMatrix();
 				this.renderer.render(this.scene, _cameras.currentPack.camera);
 			},
@@ -175,19 +174,21 @@ export let _scene = {
 			if (Controls.up) this.cube.futurPosition.y = this.cube.position.y + this.cube.speedRatio;
 			if (Controls.down) this.cube.futurPosition.y  = this.cube.position.y - this.cube.speedRatio;
 
-			if(this.cube.futurPosition != this.cube.position){
-				let minx = -(this.floor.size.x/2) + (this.cube.size.x / 2);
-				let maxx = (this.floor.size.x/2) - (this.cube.size.x / 2);
-				let miny = -(this.floor.size.y/2) - (this.cube.size.y / 2);
-				let maxy = (this.floor.size.y / 2) + (this.cube.size.y / 2);
-				if (!(this.cube.futurPosition.x > maxx) &&
-					!(this.cube.futurPosition.x < minx) &&
-					!(this.cube.futurPosition.y > maxy) &&
-					!(this.cube.futurPosition.y < miny)) {
-						this.cube.updt()
+			if (Controls.left || Controls.right || Controls.up || Controls.down){
+				if(this.cube.futurPosition != this.cube.position){
+					let minx = -(this.floor.size.x/2) + (this.cube.size.x / 2);
+					let maxx = (this.floor.size.x/2) - (this.cube.size.x / 2);
+					let miny = -(this.floor.size.y/2) - (this.cube.size.y / 2);
+					let maxy = (this.floor.size.y / 2) + (this.cube.size.y / 2);
+					if (!(this.cube.futurPosition.x > maxx) &&
+						!(this.cube.futurPosition.x < minx) &&
+						!(this.cube.futurPosition.y > maxy) &&
+						!(this.cube.futurPosition.y < miny)) {
+							this.cube.updt()
+							Controls.cb.move(this.cube.futurPosition)
 					}
+				}
 			}
-			
 			// if (Controls.space) this.cube.futurPosition.z += this.cube.speedRatio;
 		};
 		this.cube.updt = () => {

@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { _console } from "../functions/console.js";
-import { _soleil } from "../functions/soleil.js";
+import { _console } from "./console.js";
+import { _soleil } from "./soleil.js";
 // class
 // later
 // import { LoadingManager } from "./mecanics/LoadingManager.js";
@@ -11,27 +11,37 @@ import { Controls } from "./Controls.js";
 
 // functions
 // import { _cubes } from "../functions/cubes.js";
-import { _cameras } from "../functions/cameras.js";
-import { _stats } from "../functions/stats.js";
-import { _scene } from "../functions/scenes.js";
+import { _cameras } from "./cameras.js";
+import { _stats } from "./stats.js";
+import { _scene } from "./scenes.js";
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 
 export class Game {
+	_datas = null;
 	_previousREFRESH = null;
 	// later
 	// LoadingManager = new LoadingManager();
 	// _deck = null;
 
 
-	addPlayerCube= (datas)=>{
+	initPlayer= (user)=>{
+		this.user = user
 		// console.log(' wtf addcube')
 		if(_scene.cube===null) _scene._setplayer()
 	}
-	init = () => {
-		console.log(VRButton)
+	init = (datas) => {
+		// move: function(){
+		console.log(datas)
+		let {user,users,rooms,socket,cb} = datas
+		this.user=user;
+		this.users=users;
+		this.rooms=rooms;
+		this.socket=socket;
+		this.cb=cb;
+		// console.log(VRButton)
 		_stats.init()
 		_console.init();
-		this.Controls = new Controls();
+		this.Controls = new Controls(this.cb);
 		_scene.init();
 
 		// _cubes.init()

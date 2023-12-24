@@ -1,4 +1,4 @@
-import { Game } from "./js/class/Game.js";
+import { Game } from "./js/Game.js";
 export let Core = {
 	GAME: new Game(),
 	socket: false,
@@ -17,85 +17,97 @@ export let Core = {
 	sendForm: document.getElementById('formsender'),
 	joinForm: document.getElementById('formjoin'),
 	init(datas) {
-		this.socket= datas.socket;
+		this.socket = datas.socket;
 		this.GAME.init({
 			user: this.user,
 			users: this.users,
 			rooms: this.rooms,
+			socket: this.socket,
+			cb: {
+				move: (data) => {
+					this.sendPos(data)
+				}
+			}
 		});
 		this.socketRun();
 	},
-	sendFirstMessage:function(data){
-		
+	sendFirstMessage: function (data) {
 		activity.textContent = ""
 		const { name, text, time } = data
+		console.log('1er message from', name, text, time)
 
 		let div = document.createElement('div')
 		let paquetClass = ''
-		// if (name === this.user.name) paquetClass = ' own'
-		// if (name !== this.user.name && name !== 'Admin') paquetClass = ' other'
+
+		if (name === this.user.name) paquetClass = ' own'
+		if (name !== this.user.name && name !== 'Admin') paquetClass = ' other'
+
 		div.className = 'message' + paquetClass
 
-		if (name !== 'Admin') {
-			const paquet = document.createElement('div')
-			paquet.className = 'message-paquet'
+		const paquet = document.createElement('div')
+		paquet.className = 'message-paquet'
 
-			const div2 = document.createElement('div')
-			div2.className = 'message-author'
+		const div2 = document.createElement('div')
+		div2.className = 'message-author'
 
+		const spanName = document.createElement('span')
+		spanName.className = 'span-name'
+		spanName.textContent = name
+		const spanTime = document.createElement('span')
+		spanTime.className = 'span-time'
+		spanTime.textContent = time
+		div2.appendChild(spanName)
+		div2.appendChild(spanTime)
 
-			const spanName = document.createElement('span')
-			spanName.className = 'span-name'
-			spanName.textContent = name
-			const spanTime = document.createElement('span')
-			spanTime.className = 'span-time'
-			spanTime.textContent = time
-			div2.appendChild(spanName)
-			div2.appendChild(spanTime)
+		paquet.appendChild(div2)
 
-			paquet.appendChild(div2)
+		const messagediv = document.createElement('div')
+		messagediv.className = 'message-text'
+		messagediv.textContent = text
+		paquet.appendChild(messagediv)
 
-			const messagediv = document.createElement('div')
-			messagediv.className = 'message-text'
-			messagediv.textContent = text
-			paquet.appendChild(messagediv)
+		div.appendChild(paquet)
 
-
-			div.appendChild(paquet)
-
-
-
-
-
-
-		} else {
-			div.className = 'message admin'
-		}
+		// if (name !== 'Admin') {
+		// } else {
+		// 	div.className = 'message admin'
+		// }
 		this.messageContainer.appendChild(div)
 
 		this.messageContainer.scrollTop = this.messageContainer.scrollHeight
-	
+
 	},
 	addListener: function () {
-		this.sendForm.addEventListener('submit', this.sendMessage)
-		this.joinForm.addEventListener('submit', (e)=>{
+		this.sendForm.addEventListener('submit', (e) => {
 			e.preventDefault()
-			if (this.nameInput.value != '') {
-				this.enterRoom()
+			if (this.msgInput.value != '') {
+				this.sendMessage()
 			}
-		})
+		}),
+			this.joinForm.addEventListener('submit', (e) => {
+				e.preventDefault()
+				if (this.nameInput.value != '') {
+					this.enterRoom()
+				}
+			})
 		this.msgInput.addEventListener('keypress', () => {
-			if(this.user.name){
+			if (this.user.name) {
 				console.log(this.user.name, "ca ecris")
+
 				this.socket.emit(
 					'activity',
 					this.user.name)
 			}
 		})
 	},
-	enterRoom:function () {
+	sendPos: function (data) {
+		this.socket.emit('newuserposition', {
+			pos: data
+		})
+	},
+	enterRoom: function () {
 		if (this.nameInput.value != '') {
-			console.log(this.nameInput.value+' entering room A')
+			console.log(this.nameInput.value + ' entering room A')
 			this.socket.emit('enterRoom', {
 				name: this.nameInput.value,
 				room: "A"
@@ -103,23 +115,23 @@ export let Core = {
 		}
 		this.msgInput.focus()
 	},
-	sendMessage: function (e) {
-		e.preventDefault()
-		if (this.nameInput.value != '' && this.msgInput.value !='' && this.user.room != false) {
+	sendMessage: function () {
+		if (this.nameInput.value != '' && this.msgInput.value != '' && this.user.room != false) {
 			this.socket.emit('message', {
 				name: this.nameInput.value,
 				text: this.msgInput.value
 			})
 			this.msgInput.value = ""
+			this.msgInput.focus()
 		}
-		this.msgInput.focus()
 	},
 	showUsers: function () {
 		this.usersList.textContent = ''
 		if (this.users != false) {
-			this.usersList.innerHTML = `<em>Users in ${this.user.room}:</em>`
+
+			this.usersList.innerHTML = `<em>Room ${this.user.room}:</em>`
 			this.users.forEach((user, i) => {
-				this.usersList.textContent += ` ${this.user.name} ${this.user.datas.pos.x},${this.user.datas.pos.y},${this.user.datas.pos.z}`
+				this.usersList.textContent += ` ${user.name} ${user.datas.pos.x},${user.datas.pos.y},${user.datas.pos.z}`
 				if (this.users.length > 1 && i !== this.users.length - 1) {
 					this.usersList.textContent += ","
 				}
@@ -127,7 +139,7 @@ export let Core = {
 		}
 	},
 	showRooms: function (rooms) {
-		this.rooms=rooms
+		this.rooms = rooms
 		this.roomList.textContent = ''
 		if (this.rooms) {
 			this.roomList.innerHTML = '<em>Active Rooms:</em>'
@@ -142,12 +154,11 @@ export let Core = {
 	socketRun: function () {
 		this.addListener()
 		//---------------------
-		// Listen for messages 
-		this.socket.on("message", (data) => {
-			this.sendFirstMessage(data)
-		})
+		// requested from server
+		//---------------------
+		// Listen for message send
+		this.socket.on("message", (data) => this.sendFirstMessage(data))
 
-		// from server
 		this.socket.on("activity", (userPaquet) => {
 			console.log(userPaquet.user.datas.pos)
 			this.activity.textContent = `${userPaquet.name} is typing... `
@@ -158,8 +169,9 @@ export let Core = {
 				this.activity.textContent = ""
 			}, 3000)
 		})
-
 		this.socket.on('userList', ({ users }) => {
+			this.users = users
+			console.log(this.users)
 			this.showUsers()
 		})
 		// this.socket.on('addPlayer', (user) => {
@@ -179,7 +191,7 @@ export let Core = {
 			this.chatRoomValue = this.user.room
 
 			console.log('welcome ' + this.user.name, this.user.room)
-			this.GAME.addPlayerCube({ x: 2, y: 2, z: 0 }, '11111111111')
+			this.GAME.initPlayer(this.user)
 			console.log('addcube clicked')
 		})
 	}

@@ -1,4 +1,4 @@
-import { Stats } from "../vendor/stats.js/src/Stats.js";
+import { Stats } from "./vendor/stats.js/src/Stats.js";
 export let _stats = {
 	stats: null,
 	init: function() {
