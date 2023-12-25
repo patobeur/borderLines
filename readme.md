@@ -37,7 +37,7 @@ a lot of bugs as you can see !!!
         }
     }
 
-### Front imports
+### Front imports ( public side )
     <script type="importmap">{
         "imports": {
             "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
