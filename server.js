@@ -115,8 +115,25 @@ io.on('connection', (socket) => {
 
 	// newuserposition
 	socket.on('newuserposition', (data) => {
+		console.log('-----#------------------#---------------#---------------')
 		const pos = {x:data.pos.x,y:data.pos.y,z:data.pos.z}
 		UsersState.setUserPos(socket.id,pos)
+
+		UsersState.users.forEach(element => {
+	
+			console.log(element.name,element.datas.pos)
+		});
+
+
+
+
+
+
+
+
+
+
+		
 	})
 
 	// When user disconnects - to all others 
