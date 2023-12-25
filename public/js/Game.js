@@ -25,24 +25,29 @@ export class Game {
 	// _deck = null;
 
 
-	initPlayer= (user)=>{
+	initPlayer= function (user){
 		this.user = user
-		// console.log(' wtf addcube')
-		if(_scene.cube===null) _scene._setplayer()
+		console.log(' initPlayer ')
+		console.log(this.callBackFunction)
+		if(_scene.cube===null) _scene._playerInit(this.callBackFunction)
 	}
-	init = (datas) => {
+	init =function (datas) {
 		// move: function(){
+		console.log('game initiated')
 		console.log(datas)
-		let {user,users,rooms,socket,cb} = datas
+		let {user,users,rooms,socket,callBackFunction} = datas
 		this.user=user;
 		this.users=users;
 		this.rooms=rooms;
 		this.socket=socket;
-		this.cb=cb;
+		this.callBackFunction=callBackFunction;
+		console.log(this.callBackFunction)
+
 		// console.log(VRButton)
+
 		_stats.init()
 		_console.init();
-		this.Controls = new Controls(this.cb);
+		this.Controls = new Controls();
 		_scene.init();
 
 		// _cubes.init()

@@ -3,7 +3,9 @@ import { _scene } from "./scenes.js";
 import { Controls } from "./Controls.js";
 export let _player= {
 	cube:false,
-	init:function(){
+	init:function(callBackFunction){
+		console.log(callBackFunction)
+		this.callBackFunction=callBackFunction
 		let size = new THREE.Vector3(.5, .5, .5)
 		const cubeGeometry = new THREE.BoxGeometry(size.x, size.y, size.z);
 		// const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
@@ -35,7 +37,7 @@ export let _player= {
 						!(this.cube.futurPosition.y > maxy) &&
 						!(this.cube.futurPosition.y < miny)) {
 							this.cube.updt()
-							Controls.cb.move(this.cube.futurPosition)
+							this.callBackFunction.sendPlayerDatas(this.cube.futurPosition)
 					}
 				}
 			}

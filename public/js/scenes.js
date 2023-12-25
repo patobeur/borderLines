@@ -153,8 +153,8 @@ export let _scene = {
 		cube.receiveShadow = true;
 		this.scene.add(cube);
 	},
-	_setplayer:function ()  {
-		_player.init()
+	_playerInit:function (callBackFunction)  {
+		_player.init(callBackFunction)
 		// this.cube = _player.cube
 	},
 	init: function () {

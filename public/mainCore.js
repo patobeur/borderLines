@@ -23,8 +23,8 @@ export let Core = {
 			users: this.users,
 			rooms: this.rooms,
 			socket: this.socket,
-			cb: {
-				move: (data) => {
+			callBackFunction: {
+				sendPlayerDatas: (data) => {
 					this.sendPos(data)
 				}
 			}
@@ -100,10 +100,12 @@ export let Core = {
 			}
 		})
 	},
-	sendPos: function (data) {
+	sendPos: function (data) {		
+		// if (this.user.name) {
 		this.socket.emit('newuserposition', {
 			pos: data
 		})
+		// }
 	},
 	enterRoom: function () {
 		if (this.nameInput.value != '') {
@@ -164,7 +166,7 @@ export let Core = {
 		this.socket.on("message", (data) => this.sendFirstMessage(data))
 
 		this.socket.on("activity", (userPaquet) => {
-			console.log(userPaquet.user.datas.pos)
+			console.log(userPaquet)
 			this.activity.textContent = `${userPaquet.name} is typing... `
 
 			// Clear after 3 seconds 
