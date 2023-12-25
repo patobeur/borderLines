@@ -14,6 +14,7 @@ import { Controls } from "./Controls.js";
 import { _cameras } from "./cameras.js";
 import { _stats } from "./stats.js";
 import { _scene } from "./scenes.js";
+import { _player } from "./player.js";
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 
 export class Game {
@@ -103,9 +104,9 @@ export class Game {
 
 		_soleil.rotation()
 
-		if(_scene.cube) {
-			_cameras.lookAtCenter(_scene.cube.position)
-			_cameras.followaAt(_scene.cube.position)
+		if(_player.cube) {
+			_cameras.lookAtCenter(_player.cube.position)
+			_cameras.followaAt(_player.cube.position)
 		}
 		else {
 			_cameras.lookAtCenter(new THREE.Vector3(0,0,0))
@@ -114,7 +115,7 @@ export class Game {
 		_cameras.currentPack.camera.updateProjectionMatrix();
 		this.Controls._get_intersectionColorChange()
 		
-		if(_scene.cube) _scene.cube.checkControls(this.Controls);
+		if(_player.cube) _player.cube.checkControls(this.Controls);
 		
 		// _scene.cube.updt()
 		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);

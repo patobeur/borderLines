@@ -11,8 +11,8 @@ export class Controls {
 	_preventDefaultRightClick = false; // dev mod
 	_TouchM;
 	_touchDeviceActive;
-	constructor(cb) {
-		this.cb=cb
+	constructor(callback) {
+		this.cb=callback
 		// this.conslog = GameConfig.conslog
 		this._initProperties();
 		this._setupDeviceControls();
