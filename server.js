@@ -29,15 +29,24 @@ const io = new Server(expressServer, {
 let socketing = {
 	user:null,
 	prevRoom:false,
+	socket:false,
 	leaveRoom:function (name){
 		if (this.prevRoom) {
-			socket.leave(this.prevRoom)
+			this.socket.leave(this.prevRoom)
 			io.to(this.prevRoom).emit(
 				'message', 
 				UsersState.buildMsg(
 					ADMIN, 
 					`${name} has left the room`
 				)
+			)
+			io.to(this.prevRoom).emit(
+				'removePlayerFromRoom',
+				{name:name}
+			)
+			this.socket.emit(
+				'removePlayerFromRoom',
+				{name:name}
 			)
 			this.updatePrevRoomUserList()
 		}
@@ -48,11 +57,12 @@ let socketing = {
 		})
 	},
 	init:function (socket){
+		this.socket = socket
 		console.log(`User ${socket.id} connected`)
 		console.log('AllActiveRooms',UsersState.getAllActiveRooms())
 		console.log('Users',UsersState.getUsers(socket.id))
 
-		socket.emit(
+		this.socket.emit(
 			'message',
 			UsersState.buildMsg(
 				ADMIN,
@@ -69,7 +79,7 @@ io.on('connection', (socket) => {
 
 		// leave previous room 
 		socketing.prevRoom = UsersState.getUser(socket.id)?.room
-		if (socketing.prevRoom) this.leave()
+		if (socketing.prevRoom) socketing.leaveRoom()
 
 		socketing.user = UsersState.activateUser(socket.id, name, room)
 
