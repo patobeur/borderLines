@@ -1,4 +1,6 @@
-# socket io multiplayer test
+# socket io 
+
+multiple users tests, again...
 
 ## start server
     npm start
