@@ -34,7 +34,7 @@ export let Core = {
 	sendFirstMessage: function (data) {
 		activity.textContent = ""
 		const { name, text, time } = data
-		console.log('1er message from', name, text, time)
+		console.log(name, ': ', text, time)
 
 		let div = document.createElement('div')
 		let paquetClass = ''
@@ -138,6 +138,10 @@ export let Core = {
 			})
 		}
 	},
+	removePlayerFromRoom: function (name) {
+		console.log('---------------------------------------')
+		console.log('remove player :',name)
+	},
 	showRooms: function (rooms) {
 		this.rooms = rooms
 		this.roomList.textContent = ''
@@ -180,8 +184,12 @@ export let Core = {
 		// })
 
 		this.socket.on('roomList', ({ rooms }) => {
-
 			this.showRooms(rooms)
+		})
+
+		this.socket.on('removePlayerFromRoom', ({ name }) => {
+			console.log('-----------removePlayerFromRoom-------------------',name)
+			this.removePlayerFromRoom(name)
 		})
 
 		this.socket.on('welcome', (paquet) => {
