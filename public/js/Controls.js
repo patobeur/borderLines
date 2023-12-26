@@ -124,7 +124,7 @@ export class Controls {
 	}
 	_handleMouseWheel(event) {
 		if (event.ctrlKey === false && event.altKey === false) {
-			if (this.conslog) console.info(event)
+			// if (this.conslog) console.info(event)
 			this.zooming = event.deltaY > 0 ? 'out' : 'in'
 		}
 	}

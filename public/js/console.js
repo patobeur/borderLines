@@ -120,8 +120,6 @@ export const _console = {
 		this.consoleDiv.classList.add(this.sizes[this.currentSize].t)
 
 		this.log('Console set to : ' + this.sizes[this.currentSize].t);
-
-		this.scrollerDiv.scroll(0, 10000)
 		this.saveCurrentSize();
 
 	},
@@ -201,6 +199,8 @@ export const _console = {
 		this.id++;
 		this.counter++;
 		this.scrollerDiv.appendChild(newMess)
+		// this.scrollerDiv.scroll(0, 10000)
+		this.scrollerDiv.scroll(0,this.scrollerDiv.scrollHeight)
 	},
 	trashMessages: function () {
 		this.messages = {};

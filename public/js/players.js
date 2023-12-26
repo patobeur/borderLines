@@ -1,9 +1,11 @@
 import * as THREE from "three";
 import { _scene } from "./scenes.js";
 import { Controls } from "./Controls.js";
-export let _player= {
-	cube:false,
+export let _players = {
+	player:{},
+	players:{},
 	init:function(callBackFunction){
+		console.log(callBackFunction)
 		this.callBackFunction=callBackFunction
 		let size = new THREE.Vector3(.5, .5, .5)
 		const cubeGeometry = new THREE.BoxGeometry(size.x, size.y, size.z);

@@ -27,8 +27,6 @@ export class Game {
 
 	initPlayer= function (user){
 		this.user = user
-		console.log(' initPlayer ')
-		console.log(this.callBackFunction)
 		if(_scene.cube===null) _scene._playerInit(this.callBackFunction)
 	}
 	init =function (datas) {
