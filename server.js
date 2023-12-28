@@ -136,13 +136,13 @@ io.on('connection', (socket) => {
 		// )
 
 		// Update user list for room 
-		io.to(socketing.user.room).emit('updateUserListWhenUserEnterRoom', {
+		io.to(socketing.user.room).emit('refreshUsersListInRoom', {
 			users: socketing.users,
 			message:`[${UsersState.getTime()}][${socketing.user.room}][Server] ${socketing.user.name} has joined the room`
 		})
 
 		// Update rooms list for everyone 
-		io.emit('roomList', {
+		io.emit('refreshRoomsList', {
 			rooms: UsersState.getAllActiveRooms()
 		})
 		// Update rooms list for everyone in the room
@@ -180,12 +180,12 @@ io.on('connection', (socket) => {
 		if (user) {
 			io.to(user.room).emit('message', `[${UsersState.getTime()}][${user.room}][${user.name}]  has left the room`)
 
-			io.to(user.room).emit('updateUserListWhenUserEnterRoom', {
+			io.to(user.room).emit('refreshUsersListInRoom', {
 				users: UsersState.getUsersInRoom(user.room),
 				message:'test'
 			})
 
-			io.emit('roomList', {
+			io.emit('refreshRoomsList', {
 				rooms: UsersState.getAllActiveRooms()
 			})
 		}

@@ -60,7 +60,7 @@ export const _console = {
 			},
 		})
 		this.messageInput.setAttribute('type', "text")
-		this.messageInput.setAttribute('placeholder', "Type your message...")
+		// this.messageInput.setAttribute('placeholder', "Type your message...")
 
 		this.sendMessage = _front.createDiv({
 			tag: 'button',
@@ -278,7 +278,7 @@ export const _console = {
 	},
 	cssString: function () {
 		return `:root{
-			--bgcolor: rgb(3, 22, 1);
+			--bgcolor: rgba(3, 22, 1,.5);
 			--fontsize:.9rem;
 			--ofontsize:1rem;
 			--w:100%;
@@ -300,6 +300,7 @@ export const _console = {
 			flex-direction: row;
 			z-index:999999999;
 			transition: height 1s ease-out;
+			box-shadow: inset 0 7px 9px -3px rgba(0,0,0,0.4);
 			.messages {
 				position: relative;
 				width:var(--mw);

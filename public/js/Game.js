@@ -24,15 +24,25 @@ export class Game {
 	// LoadingManager = new LoadingManager();
 	// _deck = null;
 
-	
+	addTeamPlayer=function(user){
+		console.log('addTeamPlayer ',user.name)
+		this.users[user.id] = user
+	}
+	removeTeamPlayer=function(user){
+		console.log('removeTeamPlayer ',user.name)
+		delete this.users[user.id]
+	}
+
 	initPlayer= function (user){
 		this.user = user
 		if(_scene.cube===null) _scene._playerInit(this.callBackFunction)
 	}
-	initOtherPlayers = function (users){
-		// this.user = user
-		// if(_scene.cube===null) _scene._playerInit(this.callBackFunction)
-	}
+	// initOtherPlayers = function (users){
+	// 	console.log('------------------CREATION ---------------------------')
+	// 	console.table(this.users)
+	// 	// this.user = user
+	// 	// if(_scene.cube===null) _scene._playerInit(this.callBackFunction)
+	// }
 	init =function (datas) {
 		// move: function(){
 		console.log('game initiated')
@@ -43,7 +53,9 @@ export class Game {
 		this.rooms=rooms;
 		this.socket=socket;
 		this.callBackFunction=callBackFunction;
+
 		console.log(this.callBackFunction)
+
 
 		// console.log(VRButton)
 

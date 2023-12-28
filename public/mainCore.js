@@ -5,8 +5,8 @@ export let Core = {
 	GAME: new Game(),
 	socket: false,
 	user: false,
-	users: false,
-	rooms: false,
+	users: {},
+	rooms: {},
 	activityTimer: false,
 	//-----------------------------------------------------------
 	messageContainer: document.getElementById('messagecontainer'),
@@ -24,10 +24,12 @@ export let Core = {
 	joinButtonB: document.getElementById('joinb'),
 	joinButtonC: document.getElementById('joinc'),
 	init(datas) {
+
 		_console.init();
-		this.senderContainer= _console.sendercontainer;
-		this.msgInput= _console.messageInput;
-		this.sendForm= _console.formsender;
+		this.senderContainer = _console.sendercontainer;
+		this.msgInput = _console.messageInput;
+		this.sendForm = _console.formsender;
+
 		this.socket = datas.socket;
 		this.GAME.init({
 			user: this.user,
@@ -42,106 +44,14 @@ export let Core = {
 		});
 		this.socketRun();
 	},
-	// messageRecu1: function (data) {
-	// 	console.log(data)
-	// 	activity.textContent = ""
-	// 	const { name, text, time, room } = data
-	// 	_console.log(`[${time}][${room}][${name}] ${text}`)
-	// },
-	messageRecu: function (message) {
-		_console.log(`${message}`)
-
-		// let div = document.createElement('div')
-		// let paquetClass = ''
-
-		// if (name === this.user.name) paquetClass = ' own'
-		// if (name !== this.user.name && name !== 'Admin') paquetClass = ' other'
-
-		// div.className = 'message' + paquetClass
-
-		// const paquet = document.createElement('div')
-		// paquet.className = 'message-paquet'
-
-		// const div2 = document.createElement('div')
-		// div2.className = 'message-author'
-
-		// const spanName = document.createElement('span')
-		// spanName.className = 'span-name'
-		// spanName.textContent = name
-		// const spanTime = document.createElement('span')
-		// spanTime.className = 'span-time'
-		// spanTime.textContent = time
-		// div2.appendChild(spanName)
-		// div2.appendChild(spanTime)
-
-		// paquet.appendChild(div2)
-
-		// const messagediv = document.createElement('div')
-		// messagediv.className = 'message-text'
-		// messagediv.textContent = text
-		// paquet.appendChild(messagediv)
-
-		// div.appendChild(paquet)
-
-		// // if (name !== 'Admin') {
-		// // } else {
-		// // 	div.className = 'message admin'
-		// // }
-		// this.messageContainer.appendChild(div)
-
-		// this.messageContainer.scrollTop = this.messageContainer.scrollHeight
-
-
-	},
-	addListener: function () {
-		this.sendForm.addEventListener('submit', (e) => {
-			e.preventDefault()
-				this.sendPlayerMessageToRoom()
-		}),
-		this.joinForm.addEventListener('submit', (e) => {
-			e.preventDefault()
-		}),
-		// this.joinForm.addEventListener('submit', (e) => {
-		// 	e.preventDefault()
-		// 	console.log(e.target)
-		// 	if (this.nameInput.value != '') {
-		// 		this.sendEnterRoom()
-		// 	}
-		// }),
-		this.joinButtonA.addEventListener('click', (e) => {
-			e.preventDefault()
-			if (this.nameInput.value != '') {
-				this.sendEnterRoom('A')
-			}
-		}),
-		this.joinButtonB.addEventListener('click', (e) => {
-			e.preventDefault()
-			if (this.nameInput.value != '') {
-				this.sendEnterRoom('B')
-			}
-		}),
-		this.joinButtonC.addEventListener('click', (e) => {
-			e.preventDefault()
-			if (this.nameInput.value != '') {
-				this.sendEnterRoom('C')
-			}
-		})
-		// this.msgInput.addEventListener('keypress', () => {
-		// 	if (this.user.name) {
-		// 		console.log(this.user.name, "ca ecris")
-
-		// 		this.socket.emit(
-		// 			'activity',
-		// 			this.user.name)
-		// 	}
-		// })
-	},
-	sendPos: function (data) {	
+	//---------------------
+	//---------------------
+	sendPos: function (data) {
 		// if (this.user.name) {
-			this.socket.emit('newuserposition', {
-				name:this.user.name,
-				pos: data
-			})
+		this.socket.emit('newuserposition', {
+			name: this.user.name,
+			pos: data
+		})
 		// }
 	},
 	sendEnterRoom: function (room) {
@@ -155,7 +65,7 @@ export let Core = {
 	},
 	sendPlayerMessageToRoom: function () {
 		if (this.user.name && this.msgInput.value != '' && this.user.room != false) {
-			console.log('----MESSAGE SENDED FROM ---------------',this.user.name)
+			console.log('----MESSAGE SENDED FROM ---------------', this.user.name)
 			console.log(this.user)
 			this.socket.emit('sendPlayerMessageToRoom', {
 				name: this.user.name,
@@ -166,49 +76,122 @@ export let Core = {
 			this.msgInput.focus()
 		}
 	},
+	//---------------------
+	//---------------------
+	messageRecuConsole: function (message) {
+		_console.log(`messageRecuConsole ${message}`)
+	},
+	addListener: function () {
+		this.sendForm.addEventListener('submit', (e) => {
+			e.preventDefault()
+			this.sendPlayerMessageToRoom()
+		}),
+			this.joinForm.addEventListener('submit', (e) => {
+				e.preventDefault()
+			}),
+			// this.joinForm.addEventListener('submit', (e) => {
+			// 	e.preventDefault()
+			// 	console.log(e.target)
+			// 	if (this.nameInput.value != '') {
+			// 		this.sendEnterRoom()
+			// 	}
+			// }),
+			this.joinButtonA.addEventListener('click', (e) => {
+				e.preventDefault()
+				if (this.nameInput.value != '') {
+					this.sendEnterRoom('A')
+				}
+			}),
+			this.joinButtonB.addEventListener('click', (e) => {
+				e.preventDefault()
+				if (this.nameInput.value != '') {
+					this.sendEnterRoom('B')
+				}
+			}),
+			this.joinButtonC.addEventListener('click', (e) => {
+				e.preventDefault()
+				if (this.nameInput.value != '') {
+					this.sendEnterRoom('C')
+				}
+			})
+		// this.msgInput.addEventListener('keypress', () => {
+		// 	if (this.user.name) {
+		// 		console.log(this.user.name, "ca ecris")
+
+		// 		this.socket.emit(
+		// 			'activity',
+		// 			this.user.name)
+		// 	}
+		// })
+	},
 	removeThreeUser: function (users = false) {
 		console.log('removeThreeUser')
 		for (const key in users) {
 			if (Object.hasOwnProperty.call(users, key)) {
 				const element = users[key];
 				console.log(element)
-				
+
 			}
 		}
 	},
-	showUsersInRoom: function (users = false) {
+	refreshUsersListInRoom: function (users = false) {
 		if (users) {
 			this.usersList.textContent = ''
 			this.users = users
 			this.users.forEach((user, i) => {
 				let name = user.name
 				let classPlus = ''
-				if(name === this.user.name){
+				if (name === this.user.name) {
 					classPlus = ' moi'
 				}
-				let userDiv = _front.createDiv({tag:'span',attributes:{className:'player-span' + classPlus,textContent:name}})
+				let userDiv = _front.createDiv({ tag: 'span', attributes: { className: 'player-span' + classPlus, textContent: name } })
 				this.usersList.appendChild(userDiv)
 			})
 		}
 	},
 	removePlayerFromRoom: function (name) {
 		console.log('---------------------------------------')
-		console.log('remove player :',name)
+		console.log('remove player :', name)
 	},
-	showRooms: function (rooms) {
+	refreshRoomsList: function (rooms) {
 		this.rooms = rooms
-			this.roomList.textContent = ''
+		this.roomList.textContent = ''
 		if (this.rooms) {
 			this.rooms.forEach((room, i) => {
 				let classPlus = ''
-				if(room===this.user.room){
+				if (room === this.user.room) {
 					classPlus = ' moi'
 				}
-				let roomDiv = _front.createDiv({tag:'span',attributes:{className:'room-span'+classPlus,textContent:room}})
+				let roomDiv = _front.createDiv({ tag: 'span', attributes: { className: 'room-span' + classPlus, textContent: room } })
 				this.roomList.appendChild(roomDiv)
 			})
-			let icoDiv = _front.createDiv({tag:'span',attributes:{className:'ico-span',textContent:'R'}})
+			let icoDiv = _front.createDiv({ tag: 'span', attributes: { className: 'ico-span', textContent: 'R' } })
 			this.roomList.appendChild(icoDiv)
+		}
+	},
+	addNewUsers: function (users) {
+		for (const key in users) {
+			const user = users[key];
+			if (user.id != this.user.id) {
+				if (typeof this.GAME.users[user.id] === 'undefined') {
+					this.GAME.addTeamPlayer(user)
+				}
+			}
+		}
+	},
+	removeMissingUsers: function (users) {
+		const usersById = {}
+		users.forEach(element => {
+			usersById[element.id] = element
+		});
+		let currentUsersInGame = this.GAME.users
+		for (const key in currentUsersInGame) {
+			const user = currentUsersInGame[key];
+			if (this.user.id != user.id) {
+				if (typeof usersById[user.id] === 'undefined') {
+					this.GAME.removeTeamPlayer(user)
+				}
+			}
 		}
 	},
 	socketRun: function () {
@@ -217,7 +200,7 @@ export let Core = {
 		// requested from server
 		//---------------------
 		// Listen for message send
-		this.socket.on("message", (data) => this.messageRecu(data))
+		this.socket.on("message", (data) => this.messageRecuConsole(data))
 
 		this.socket.on("activity", (userPaquet) => {
 			console.log(userPaquet)
@@ -230,30 +213,29 @@ export let Core = {
 			}, 3000)
 		})
 		this.socket.on('updPlayerByName', (datas) => {
-			let {name, pos} = datas
-			console.log('move of ',name,pos)
+			let { name, pos } = datas
+			console.log('move of ', name, pos)
 		})
 		// this.socket.on('addPlayer', (user) => {
 		// 	GAME.addPlayerCube({ x: 2, y: 2, z: 0 },'11111111111')
 		// 	console.log('addcube clicked')
 		// })
 
-		this.socket.on('roomList', ({ rooms }) => {
-			this.showRooms(rooms)
+		this.socket.on('refreshRoomsList', ({ rooms }) => {
+			this.refreshRoomsList(rooms)
 		})
 
 		this.socket.on('removePlayerFromRoom', ({ name }) => {
-			console.log('-----------removePlayerFromRoom-------------------',name)
 			this.removePlayerFromRoom(name)
 		})
 
-		this.socket.on('updateUserListWhenUserEnterRoom', ({ users, message }) => {
-			this.showUsersInRoom(users)
+		this.socket.on('refreshUsersListInRoom', ({ users, message }) => {
+			this.refreshUsersListInRoom(users)
+			this.removeMissingUsers(users)
+			this.addNewUsers(users)
 
 			_console.log(message)
-			console.log('moi',this.user)
-			console.log('les autres avant',this.usersOld)
-			console.log('les autres',this.users)
+			this.usersOld = this.users
 
 			// ????????????????
 			// this.removeThreeUser(this.users)
@@ -262,22 +244,18 @@ export let Core = {
 			this.usersOld = {}
 			this.user = paquet.user
 			this.users = paquet.users
-			// this.showUsersInRoom(this.users)
+			// this.refreshUsersListInRoom(this.users)
 			const log = paquet.message
-						// let newpaquet = {
-						// 	name:this.user.name,
-						// 	text:paquet.message,
-						// 	time:paquet.datas.name,
-						// 	room:this.user.room,
-						// }
-						this.joinContainer.classList.add('ok')
-						this.joinContainer.remove()
-						_console.log(log)
-// 			this.messageRecu1(newpaquet)
-
-			console.log('welcome ' + this.user.name, this.user.room)
-			console.log('welcome2 paquet ',paquet)
-
+			// let newpaquet = {
+			// 	name:this.user.name,
+			// 	text:paquet.message,
+			// 	time:paquet.datas.name,
+			// 	room:this.user.room,
+			// }
+			this.joinContainer.classList.add('ok')
+			this.joinContainer.remove()
+			_console.log(log)
+			
 			// initialization
 			this.GAME.initPlayer(this.user)
 		})

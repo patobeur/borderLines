@@ -8,12 +8,17 @@ canvas {
 	position: absolute;
 	z-index: -1;
 	top: 0;
-	left: 0
+	left: 0;
+	cursor: none;
+	&:hover{
+		cursor: none;
+	}
 }
 
 body {
 	overflow: hidden;
 	background-color: black;
+	cursor: none;
 }
 
 .target {
@@ -211,17 +216,10 @@ body:hover {
 				color:white;
 				width: 100%;
 				border: 0;
-				&::placeholder {
-					animation-duration: .8s;
-					animation-name: clignoter;
-					animation-iteration-count: infinite;
-					/* transition: none; */
-				  }
-				  
 			}
-			/* &:before {
+			&:before {
 				position: absolute;
-				color:rgb(16, 131, 5);
+				color:rgb(49, 214, 34);
 				left:5px;
 				content:" _";
 				z-index: 999999999999;
@@ -234,7 +232,7 @@ body:hover {
 				transition: none;
 				line-height: 22px;
 				font-weight:bolder;
-			} */
+			}
 			/* &:after{
 				top:0px;
 				left:0px;
@@ -270,9 +268,9 @@ body:hover {
 }
 
 @keyframes clignoter {
-	0%   { color:green; }
-	40%   {color:red; }
-	100% { color:green; }
+	0%   { opacity: 1; }
+	20%   {opacity: 0; }
+	100% { opacity: 1; }
   }
 .join-container {
 	position: absolute;
@@ -285,7 +283,8 @@ body:hover {
 	border-bottom-right-radius: .5rem;
 	border-top-left-radius: .5rem;
 	border-bottom-left-radius: .5rem;
-	background-color: #ffffff;
+	background-color: #ffffff2d;
+	box-shadow: 0 0 9px 5px rgba(0,0,0,0.4);
 
 	/* height: calc(100svh / 2);
 	width: calc(100svw - 10px); */
@@ -314,12 +313,10 @@ body:hover {
 			border-color: #1a18a1;
 			width: 100%;
 		}
-
 		.mess[data-type="name"] {
 			background-color: #159e15;
 			color: white;
 		}
-
 		.mess[data-type="what"] {
 			background-color: #159e15;
 			color: white;
