@@ -31,6 +31,67 @@ export const _console = {
 	saveCurrentSize: function () {
 		localStorage.setItem(this.cookieName, this.currentSize);
 	},
+	createSendMessageContainer: function () {
+		this.sendercontainer = _front.createDiv({
+			tag: 'div',
+			attributes: {
+				id: 'sendercontainer',
+				className: 'sender-container'
+			},
+		})
+		this.formsender = _front.createDiv({
+			tag: 'form',
+			attributes: {
+				id: 'formsender',
+				className: 'form-sender'
+			},
+		})
+		this.inputsender = _front.createDiv({
+			tag: 'div',
+			attributes: {
+				className: 'inputsender'
+			},
+		})
+		this.messageInput = _front.createDiv({
+			tag: 'input',
+			attributes: {
+				id: 'message',
+				className: 'message'
+			},
+		})
+		this.messageInput.setAttribute('type', "text")
+		this.messageInput.setAttribute('placeholder', "Type your message...")
+
+		this.sendMessage = _front.createDiv({
+			tag: 'button',
+			attributes: {
+				id: 'sendMessage',
+				className: 'message',
+				textContent: 'Send'
+			},
+		})
+
+		this.inputsender.appendChild(this.messageInput)
+		this.formsender.appendChild(this.inputsender)
+		this.formsender.appendChild(this.sendMessage)
+		this.sendercontainer.appendChild(this.formsender)
+
+		// <div id="sendercontainer" class="sender-container">
+		// 	<form id="formsender" class="form-sender">
+		// 		<div class="inputsender">
+		// 			<input id="message" type="text" placeholder="Type your message...">
+		// 		</div>
+		// 		<button class="button" id="sendMessage" type="submit" class="send-message">Send</button>
+		// 	</form>
+		// </div>
+
+		// const joinform = document.getElementById('sendercontainer')
+		// if(joinform){
+		// 	joinform.remove
+		// }
+		this.messagesDiv.appendChild(this.sendercontainer)
+
+	},
 	create: function () {
 		this.consoleDiv = _front.createDiv({
 			tag: 'div',
@@ -93,9 +154,13 @@ export const _console = {
 		})
 		// -------------------------------------------------
 		this.messagesDiv.appendChild(this.scrollerDiv)
+
+
+
 		this.optionsDiv.appendChild(this.options1)
 		this.optionsDiv.appendChild(this.options2)
 		this.optionsDiv.appendChild(this.options3)
+
 		this.consoleDiv.appendChild(this.optionsDiv)
 		this.consoleDiv.appendChild(this.messagesDiv)
 		// -------------------------------------------------
@@ -225,7 +290,7 @@ export const _console = {
 		}
 		#console{
 			position: absolute;
-			bottom:0px;
+			bottom:0;
 			left:0;
 			background-color: var(--bgcolor);
 			color:white;
@@ -243,7 +308,8 @@ export const _console = {
 				flex-direction: column;
 				justify-content: flex-end;
 				.scroller {
-					min-height: 100%;
+					flex-grow: 1;
+					// min-height: 100%;
 					overflow-y: scroll;
 					cursor: pointer;
 					width:100%;
@@ -299,6 +365,7 @@ export const _console = {
 	init: function () {
 		this.addcss()
 		this.create();
+		this.createSendMessageContainer();
 		this.loadCurrentSize(); // Load the saved currentSize
 		document.body.appendChild(this.consoleDiv)
 	}

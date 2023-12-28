@@ -11,19 +11,23 @@ export let Core = {
 	//-----------------------------------------------------------
 	messageContainer: document.getElementById('messagecontainer'),
 	joinContainer: document.getElementById('joincontainer'),
-	senderContainer: document.getElementById('sendercontainer'),
+	// senderContainer: document.getElementById('sendercontainer'),
 	usersList: document.getElementById('userscontainer'),
 	roomList: document.getElementById('roomscontainer'),
 	activity: document.getElementById('activity'),
-	msgInput: document.getElementById('message'),
+	// msgInput: document.getElementById('message'),
 	nameInput: document.getElementById('name'),
 	chatRoom: document.getElementById('room'),
-	sendForm: document.getElementById('formsender'),
+	// sendForm: document.getElementById('formsender'),
 	joinForm: document.getElementById('formjoin'),
 	joinButtonA: document.getElementById('joina'),
 	joinButtonB: document.getElementById('joinb'),
 	joinButtonC: document.getElementById('joinc'),
 	init(datas) {
+		_console.init();
+		this.senderContainer= _console.sendercontainer;
+		this.msgInput= _console.messageInput;
+		this.sendForm= _console.formsender;
 		this.socket = datas.socket;
 		this.GAME.init({
 			user: this.user,

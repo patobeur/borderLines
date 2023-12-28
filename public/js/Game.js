@@ -48,7 +48,6 @@ export class Game {
 		// console.log(VRButton)
 
 		_stats.init()
-		_console.init();
 		this.Controls = new Controls();
 		_scene.init();
 
