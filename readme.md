@@ -50,6 +50,19 @@ a lot of bugs as you can see !!!
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js" crossorigin="anonymous" referrerpolicy="no-referrer">
     </script>
 
+### local access config default set 
+
+    const io = new Server(expressServer, {
+        cors: {
+            origin: process.env.NODE_ENV === "production" ? false : [
+                "http://localhost:5500",
+                "http://127.0.0.1:5500",
+                "http://127.0.0.1:3500",
+                "http://127.0.0.1:5501"
+            ]
+        }
+    })
+
 ### One version before
 
 https://github.com/Penflam/borderLines
