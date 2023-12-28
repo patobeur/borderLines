@@ -24,10 +24,14 @@ export class Game {
 	// LoadingManager = new LoadingManager();
 	// _deck = null;
 
-
+	
 	initPlayer= function (user){
 		this.user = user
 		if(_scene.cube===null) _scene._playerInit(this.callBackFunction)
+	}
+	initOtherPlayers = function (users){
+		// this.user = user
+		// if(_scene.cube===null) _scene._playerInit(this.callBackFunction)
 	}
 	init =function (datas) {
 		// move: function(){
@@ -76,18 +80,8 @@ export class Game {
 	};
 	_START() {
 		console.log("STARTED");
-
 		// console.log(_scene.scene.children.length)
-
-		// let last = _scene.scene.children[_scene.scene.children.length-1].children[0]
-
-		// _console.log('last.name',last.name)
-		// _console.log(last.name,'castShadow',last.castShadow)
-		// _console.log(last.name,'receiveShadow',last.receiveShadow)
-
-
 		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);
-
 		this._REFRESH();
 	}
 	_REFRESH = () => {

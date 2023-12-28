@@ -28,22 +28,26 @@ const io = new Server(expressServer, {
 })
 let socketing = {
 	user:null,
+	users:null,
 	prevRoom:false,
 	socket:false,
 	leaveRoom:function (name){
 		if (this.prevRoom) {
+			
 			this.socket.leave(this.prevRoom)
+			// LE JOUEUR A QUITTÉ LA ROOM
+
+			// message to all user in prevroom
 			io.to(this.prevRoom).emit(
 				'message', 
-				UsersState.buildMsg(
-					ADMIN, 
-					`${name} has left the room`
-				)
+				`[${UsersState.getTime()}][${this.prevRoom}][Server] ${name} has left the room`
 			)
+			// remove player for all users in prevroom
 			io.to(this.prevRoom).emit(
 				'removePlayerFromRoom',
 				{name:name}
 			)
+			// remove player in prevroom
 			this.socket.emit(
 				'removePlayerFromRoom',
 				{name:name}
@@ -52,7 +56,8 @@ let socketing = {
 		}
 	},
 	updatePrevRoomUserList:function (){
-		io.to(this.prevRoom).emit('userList', {
+		// send new userList for all users in prevroom
+		io.to(this.prevRoom).emit('updateUserList', {
 			users: UsersState.getUsersInRoom(this.prevRoom)
 		})
 	},
@@ -107,19 +112,20 @@ io.on('connection', (socket) => {
 	// })
 	socket.on('enterRoom', ({ name, room }) => {
 
-		// leave previous room 
 		socketing.prevRoom = UsersState.getUser(socket.id)?.room
+
+		// leave previous room if prevRoom
 		if (socketing.prevRoom) socketing.leaveRoom()
 
-		socketing.user = UsersState.activateUser(socket.id, name, room)
-
+		socketing.user = UsersState.activateUserInNewRoom(socket.id, name, room)
+		socketing.users = UsersState.getUsersInRoom(socketing.user.room)
 		// join room 
 		socket.join(socketing.user.room)
 
 		// send Welcome Paquet message
 		socket.emit('welcome', {
 			user:socketing.user,
-			users:UsersState.getUsersInRoom(socketing.user.room),
+			users:socketing.users,
 			message:`[${UsersState.getTime()}][${socketing.user.room}][Server] You have joined the ${socketing.user.room} chat room`
 		})
 		
@@ -129,9 +135,9 @@ io.on('connection', (socket) => {
 		// )
 
 		// Update user list for room 
-		io.to(socketing.user.room).emit('userList', {
-			users: UsersState.getUsersInRoom(socketing.user.room),
-			message:`[${UsersState.getTime()}][${socketing.user.room}][${socketing.user.name}] has joined the room`
+		io.to(socketing.user.room).emit('updateUserListWhenUserEnterRoom', {
+			users: socketing.users,
+			message:`[${UsersState.getTime()}][${socketing.user.room}][Server] ${socketing.user.name} has joined the room`
 		})
 
 		// Update rooms list for everyone 
@@ -173,8 +179,9 @@ io.on('connection', (socket) => {
 		if (user) {
 			io.to(user.room).emit('message', `[${UsersState.getTime()}][${user.room}][${user.name}]  has left the room`)
 
-			io.to(user.room).emit('userList', {
-				users: UsersState.getUsersInRoom(user.room)
+			io.to(user.room).emit('updateUserListWhenUserEnterRoom', {
+				users: UsersState.getUsersInRoom(user.room),
+				message:'test'
 			})
 
 			io.emit('roomList', {

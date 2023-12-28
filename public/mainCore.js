@@ -162,12 +162,27 @@ export let Core = {
 			this.msgInput.focus()
 		}
 	},
-	showUsers: function () {
-		this.usersList.textContent = ''
-		if (this.users != false) {
-				this.usersList.textContent=''
+	removeThreeUser: function (users = false) {
+		console.log('removeThreeUser')
+		for (const key in users) {
+			if (Object.hasOwnProperty.call(users, key)) {
+				const element = users[key];
+				console.log(element)
+				
+			}
+		}
+	},
+	showUsersInRoom: function (users = false) {
+		if (users) {
+			this.usersList.textContent = ''
+			this.users = users
 			this.users.forEach((user, i) => {
-				let userDiv = _front.createDiv({tag:'span',attributes:{className:'player-span',textContent:user.name}})
+				let name = user.name
+				let classPlus = ''
+				if(name === this.user.name){
+					classPlus = ' moi'
+				}
+				let userDiv = _front.createDiv({tag:'span',attributes:{className:'player-span' + classPlus,textContent:name}})
 				this.usersList.appendChild(userDiv)
 			})
 		}
@@ -181,7 +196,11 @@ export let Core = {
 			this.roomList.textContent = ''
 		if (this.rooms) {
 			this.rooms.forEach((room, i) => {
-				let roomDiv = _front.createDiv({tag:'span',attributes:{className:'room-span',textContent:room}})
+				let classPlus = ''
+				if(room===this.user.room){
+					classPlus = ' moi'
+				}
+				let roomDiv = _front.createDiv({tag:'span',attributes:{className:'room-span'+classPlus,textContent:room}})
 				this.roomList.appendChild(roomDiv)
 			})
 			let icoDiv = _front.createDiv({tag:'span',attributes:{className:'ico-span',textContent:'R'}})
@@ -210,11 +229,6 @@ export let Core = {
 			let {name, pos} = datas
 			console.log('move of ',name,pos)
 		})
-		this.socket.on('userList', ({ users, message }) => {
-			this.users = users
-			console.log(this.users)
-			this.showUsers()
-		})
 		// this.socket.on('addPlayer', (user) => {
 		// 	GAME.addPlayerCube({ x: 2, y: 2, z: 0 },'11111111111')
 		// 	console.log('addcube clicked')
@@ -229,21 +243,32 @@ export let Core = {
 			this.removePlayerFromRoom(name)
 		})
 
+		this.socket.on('updateUserListWhenUserEnterRoom', ({ users, message }) => {
+			this.showUsersInRoom(users)
+
+			_console.log(message)
+			console.log('moi',this.user)
+			console.log('les autres avant',this.usersOld)
+			console.log('les autres',this.users)
+
+			// ????????????????
+			// this.removeThreeUser(this.users)
+		})
 		this.socket.on('welcome', (paquet) => {
+			this.usersOld = {}
 			this.user = paquet.user
 			this.users = paquet.users
+			// this.showUsersInRoom(this.users)
 			const log = paquet.message
-
-
-// let newpaquet = {
-// 	name:this.user.name,
-// 	text:paquet.message,
-// 	time:paquet.datas.name,
-// 	room:this.user.room,
-// }
-this.joinContainer.classList.add('ok')
-this.joinContainer.remove()
-_console.log(log)
+						// let newpaquet = {
+						// 	name:this.user.name,
+						// 	text:paquet.message,
+						// 	time:paquet.datas.name,
+						// 	room:this.user.room,
+						// }
+						this.joinContainer.classList.add('ok')
+						this.joinContainer.remove()
+						_console.log(log)
 // 			this.messageRecu1(newpaquet)
 
 			console.log('welcome ' + this.user.name, this.user.room)

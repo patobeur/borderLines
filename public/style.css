@@ -241,6 +241,7 @@ body:hover {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	
 	transition-property: all;
 	transition-duration: 1s;
 	z-index: 30;
@@ -274,13 +275,8 @@ body:hover {
 }
 
 .join-container.ok {
-	top: 50%;
 	left: -200px;
 	width: 250px;
-	justify-content: center;
-	align-items: center;
-	transition-property: all;
-	transition-duration: 1s;
 	&:hover{
 		left: 0;
 	}
@@ -323,6 +319,9 @@ body:hover {
 				border-top-right-radius: .5rem;
 				border-bottom-right-radius: .5rem;
 			}
+			&.moi{
+				background-color: #1d50009a;
+			}
 		}
 	}
 }
@@ -349,6 +348,9 @@ body:hover {
 			border-bottom-left-radius: .5rem;
 			padding: .1rem .3rem;
 			background-color: #0007299a;
+			&.moi{
+				background-color: #1d50009a;
+			}
 		}
 	}
 }

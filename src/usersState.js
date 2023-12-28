@@ -19,7 +19,7 @@ export const UsersState = {
 			time: this.getTime()
 		}
 	},
-	activateUser: function (id, name, room) {
+	activateUserInNewRoom: function (id, name, room) {
 		let datas = {
 			pos : {x:0,y:0,z:0},
 			time : this.getTime()
