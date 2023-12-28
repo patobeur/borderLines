@@ -1,53 +1,36 @@
 import * as THREE from "three";
 import { _scene } from "./scenes.js";
-import { Controls } from "./Controls.js";
 export let _players = {
-	player:{},
-	players:{},
-	init:function(callBackFunction){
-		console.log(callBackFunction)
-		this.callBackFunction=callBackFunction
+	player: null,
+	players: {},
+	counterPlayers: {},
+	init: function (player) {
+		this.player = player
+
+	},
+	addTeamMate: function (user) {
 		let size = new THREE.Vector3(.5, .5, .5)
 		const cubeGeometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-		// const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-		const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-		this.cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-		this.cube.name = 'CUBE';
-		this.cube.size = size
-		this.cube.position.z = this.cube.size.z / 2
-		this.cube.velocity = new THREE.Vector3(1, 0, 0)
-		this.cube.speedRatio = .1
-		this.cube.hover = false
-		this.cube.futurPosition = new THREE.Vector3(0, 0, 0)
-		this.cube.checkControls = (Controls) => {
-			
-			// this.cube.futurPosition.copy(this.cube.position)
-			if (Controls.left) this.cube.futurPosition.x = this.cube.position.x - this.cube.speedRatio;
-			if (Controls.right) this.cube.futurPosition.x = this.cube.position.x + this.cube.speedRatio;
-			if (Controls.up) this.cube.futurPosition.y = this.cube.position.y + this.cube.speedRatio;
-			if (Controls.down) this.cube.futurPosition.y  = this.cube.position.y - this.cube.speedRatio;
+		const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 });
 
-			if (Controls.left || Controls.right || Controls.up || Controls.down){
-				if(this.cube.futurPosition != this.cube.position){
-					let minx = -(_scene.floor.size.x/2) + (this.cube.size.x / 2);
-					let maxx = (_scene.floor.size.x/2) - (this.cube.size.x / 2);
-					let miny = -(_scene.floor.size.y/2) - (this.cube.size.y / 2);
-					let maxy = (_scene.floor.size.y / 2) + (this.cube.size.y / 2);
-					if (!(this.cube.futurPosition.x > maxx) &&
-						!(this.cube.futurPosition.x < minx) &&
-						!(this.cube.futurPosition.y > maxy) &&
-						!(this.cube.futurPosition.y < miny)) {
-							this.cube.updt()
-							this.callBackFunction.sendPlayerDatas(this.cube.futurPosition)
-					}
-				}
-			}
+		const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+		cube.name = 'CUBE';
+		cube.size = size
+		cube.position.z = cube.size.z / 2
+		cube.velocity = new THREE.Vector3(1, 0, 0)
+		cube.speedRatio = .1
+		cube.hover = false
+		cube.update = (pos) => {
+			cube.position.copy(pos)
 		}
-		this.cube.updt = () => {
-			this.cube.position.copy(this.cube.futurPosition)
+		cube.castShadow = true;
+		cube.receiveShadow = true;
+
+		this.counterPlayers++
+		this.players[user.id] = {
+			user:user,
+			mesh:cube
 		}
-		this.cube.castShadow = true;
-		this.cube.receiveShadow = true;
-		_scene.scene.add(this.cube);
-	}
+		_scene.scene.add(this.players[user.id].mesh);
+	},
 }

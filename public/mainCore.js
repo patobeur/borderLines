@@ -1,6 +1,7 @@
-import { Game } from "./js/Game.js";
+import { Game } from "./Game.js";
 import { _console } from "./js/console.js";
 import { _front } from "./js/front.js";
+import { _players } from "./js/players.js";
 export let Core = {
 	GAME: new Game(),
 	socket: false,
@@ -32,10 +33,10 @@ export let Core = {
 
 		this.socket = datas.socket;
 		this.GAME.init({
-			user: this.user,
-			users: this.users,
-			rooms: this.rooms,
-			socket: this.socket,
+			// user: this.user,
+			// users: this.users,
+			// rooms: this.rooms,
+			// socket: this.socket,
 			callBackFunction: {
 				sendPlayerDatas: (data) => {
 					this.sendPos(data)
@@ -212,9 +213,15 @@ export let Core = {
 				this.activity.textContent = ""
 			}, 3000)
 		})
+		this.socket.on('updPlayerById', (datas) => {
+			let { id, pos } = datas
+			_players.players[id].mesh.update(pos)
+
+		})
 		this.socket.on('updPlayerByName', (datas) => {
 			let { name, pos } = datas
 			console.log('move of ', name, pos)
+
 		})
 		// this.socket.on('addPlayer', (user) => {
 		// 	GAME.addPlayerCube({ x: 2, y: 2, z: 0 },'11111111111')

@@ -166,8 +166,12 @@ io.on('connection', (socket) => {
 		// });
 
 		// send player pos to all player in the room
-		io.to(socketing.user.room).emit('updPlayerByName', {
-			name: name,
+		// io.to(socketing.user.room).emit('updPlayerByName', {
+		// 	name: name,
+		// 	pos: pos
+		// })
+		io.to(socketing.user.room).emit('updPlayerById', {
+			id: socket.id,
 			pos: pos
 		})
 	})

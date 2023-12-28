@@ -6,14 +6,20 @@ multiple users tests, again...
     npm start
     npm run dev (for nodemon)
 
-    then right click on index.html to open with "Live Server"
+    open index.html with "Live Server"
 
 ## bugs
 
 a lot of bugs as you can see !!!
 
+less than before but still a lot of missing functionalities ...
 
+- [x] no limite for users in a room
+- [x] no limite for rooms
+- [x] movement along floor borders isn't smooth
+- [x] still no visible teamate ;(
 
+- [x] done
 
 ### packages
     
@@ -39,7 +45,8 @@ a lot of bugs as you can see !!!
         }
     }
 
-### Front imports ( public side )
+### Front imports ( client side )
+
     <script type="importmap">{
         "imports": {
             "three": "https://unpkg.com/three@0.159.0/build/three.module.js",
@@ -50,7 +57,11 @@ a lot of bugs as you can see !!!
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js" crossorigin="anonymous" referrerpolicy="no-referrer">
     </script>
 
-### local access config default set 
+- [x] client need to be standAlone as server
+
+### ip connection set ( server side )
+
+server.js
 
     const io = new Server(expressServer, {
         cors: {
@@ -63,6 +74,4 @@ a lot of bugs as you can see !!!
         }
     })
 
-### One version before
-
-https://github.com/Penflam/borderLines
+- [x] server need to be standAlone as client

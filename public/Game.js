@@ -1,41 +1,49 @@
 import * as THREE from "three";
-import { _console } from "./console.js";
-import { _soleil } from "./soleil.js";
+import { _console } from "./js/console.js";
+import { _soleil } from "./js/soleil.js";
 // class
 // later
 // import { LoadingManager } from "./mecanics/LoadingManager.js";
-import { Controls } from "./Controls.js";
+import { Controls } from "./js/Controls.js";
 
 // later
 // import { _Deck } from "./mecanics/deck.js";
 
 // functions
 // import { _cubes } from "../functions/cubes.js";
-import { _cameras } from "./cameras.js";
-import { _stats } from "./stats.js";
-import { _scene } from "./scenes.js";
-import { _player } from "./player.js";
+import { _cameras } from "./js/cameras.js";
+import { _stats } from "./js/stats.js";
+import { _scene } from "./js/scenes.js";
+import { _player } from "./js/player.js";
+import { _players } from "./js/players.js";
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 
 export class Game {
 	_datas = null;
 	_previousREFRESH = null;
+
+	user = false;
+	// socket= false;
+	users = {};
+	rooms = {};
+
 	// later
 	// LoadingManager = new LoadingManager();
 	// _deck = null;
 
-	addTeamPlayer=function(user){
-		console.log('addTeamPlayer ',user.name)
+	addTeamPlayer = function (user) {
+		console.log('addTeamPlayer ', user.name)
 		this.users[user.id] = user
+		_players.addTeamMate(this.users[user.id])
 	}
-	removeTeamPlayer=function(user){
-		console.log('removeTeamPlayer ',user.name)
+	removeTeamPlayer = function (user) {
+		console.log('removeTeamPlayer ', user.name)
 		delete this.users[user.id]
 	}
 
-	initPlayer= function (user){
+	initPlayer = function (user) {
 		this.user = user
-		if(_scene.cube===null) _scene._playerInit(this.callBackFunction)
+		if (_scene.cube === null) _scene._playerInit(this.callBackFunction)
 	}
 	// initOtherPlayers = function (users){
 	// 	console.log('------------------CREATION ---------------------------')
@@ -43,16 +51,16 @@ export class Game {
 	// 	// this.user = user
 	// 	// if(_scene.cube===null) _scene._playerInit(this.callBackFunction)
 	// }
-	init =function (datas) {
-		// move: function(){
+	init = function (datas) {
 		console.log('game initiated')
 		console.log(datas)
-		let {user,users,rooms,socket,callBackFunction} = datas
-		this.user=user;
-		this.users=users;
-		this.rooms=rooms;
-		this.socket=socket;
-		this.callBackFunction=callBackFunction;
+		// let { user, users, rooms, socket, callBackFunction } = datas
+		let { callBackFunction } = datas
+		// this.user = user;
+		// this.users = users;
+		// this.rooms = rooms;
+		// this.socket = socket;
+		this.callBackFunction = callBackFunction;
 
 		console.log(this.callBackFunction)
 
@@ -72,13 +80,13 @@ export class Game {
 		// later
 		// this.LoadingManager.setScene(this._scene)
 		// this.LoadingManager.loadThemAll()
-		
+
 		this.addVRButton();
 		this.addEventsListeners();
 		this._START();
 	};
 	addVRButton = () => {
-		document.body.appendChild( VRButton.createButton( _scene.renderer ) );
+		document.body.appendChild(VRButton.createButton(_scene.renderer));
 	};
 	addEventsListeners = () => {
 		window.addEventListener("resize", () => {
@@ -112,19 +120,19 @@ export class Game {
 
 		_soleil.rotation()
 
-		if(_player.cube) {
+		if (_player.cube) {
 			_cameras.lookAtCenter(_player.cube.position)
 			_cameras.followaAt(_player.cube.position)
 		}
 		else {
-			_cameras.lookAtCenter(new THREE.Vector3(0,0,0))
-			_cameras.followaAt(new THREE.Vector3(0,0,0))
+			_cameras.lookAtCenter(new THREE.Vector3(0, 0, 0))
+			_cameras.followaAt(new THREE.Vector3(0, 0, 0))
 		}
 		_cameras.currentPack.camera.updateProjectionMatrix();
 		this.Controls._get_intersectionColorChange()
-		
-		if(_player.cube) _player.cube.checkControls(this.Controls);
-		
+
+		if (_player.cube) _player.cube.checkControls(this.Controls);
+
 		// _scene.cube.updt()
 		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);
 		// this.Controls.update()
