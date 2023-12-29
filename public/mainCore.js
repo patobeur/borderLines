@@ -39,7 +39,10 @@ export let Core = {
 			// socket: this.socket,
 			callBackFunction: {
 				sendPlayerDatas: (data) => {
-					this.sendPos(data)
+					this.socket.emit('newuserposition', {
+						name: this.user.name,
+						pos: data
+					})
 				}
 			}
 		});
@@ -47,14 +50,6 @@ export let Core = {
 	},
 	//---------------------
 	//---------------------
-	sendPos: function (data) {
-		// if (this.user.name) {
-		this.socket.emit('newuserposition', {
-			name: this.user.name,
-			pos: data
-		})
-		// }
-	},
 	sendEnterRoom: function (room) {
 		if (this.nameInput.value != '') {
 			this.socket.emit('enterRoom', {
@@ -90,13 +85,6 @@ export let Core = {
 			this.joinForm.addEventListener('submit', (e) => {
 				e.preventDefault()
 			}),
-			// this.joinForm.addEventListener('submit', (e) => {
-			// 	e.preventDefault()
-			// 	console.log(e.target)
-			// 	if (this.nameInput.value != '') {
-			// 		this.sendEnterRoom()
-			// 	}
-			// }),
 			this.joinButtonA.addEventListener('click', (e) => {
 				e.preventDefault()
 				if (this.nameInput.value != '') {
@@ -215,18 +203,15 @@ export let Core = {
 		})
 		this.socket.on('updPlayerById', (datas) => {
 			let { id, pos } = datas
-			_players.players[id].mesh.update(pos)
-
+			if (this.socket.id != id) {
+				_players.players[id].mesh.update(pos)
+			}
 		})
 		this.socket.on('updPlayerByName', (datas) => {
 			let { name, pos } = datas
 			console.log('move of ', name, pos)
 
 		})
-		// this.socket.on('addPlayer', (user) => {
-		// 	GAME.addPlayerCube({ x: 2, y: 2, z: 0 },'11111111111')
-		// 	console.log('addcube clicked')
-		// })
 
 		this.socket.on('refreshRoomsList', ({ rooms }) => {
 			this.refreshRoomsList(rooms)
@@ -262,7 +247,7 @@ export let Core = {
 			this.joinContainer.classList.add('ok')
 			this.joinContainer.remove()
 			_console.log(log)
-			
+
 			// initialization
 			this.GAME.initPlayer(this.user)
 		})
