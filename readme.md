@@ -3,10 +3,12 @@
 multiple users tests, again...
 
 ## start server
+
+    npm install
     npm start
     npm run dev (for nodemon)
 
-    open index.html with "Live Server"
+    open index.html with "Live Server" for client
 
 ## bugs
 
@@ -14,12 +16,12 @@ a lot of bugs as you can see !!!
 
 less than before but still a lot of missing functionalities ...
 
-- [x] no limite for users in a room
-- [x] no limite for rooms
-- [x] movement along floor borders isn't smooth
-- [x] still no visible teamate ;(
+- [ ] no limite for users in a room
+- [ ] no limite for rooms
+- [ ] movement along floor borders isn't smooth
+- [x] still no visible teamate
 
-- [x] done
+- [ ] done
 
 ### packages
     
@@ -57,7 +59,7 @@ less than before but still a lot of missing functionalities ...
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js" crossorigin="anonymous" referrerpolicy="no-referrer">
     </script>
 
-- [x] client need to be standAlone as server
+- [ ] client need to be standAlone as server
 
 ### ip connection set ( server side )
 
@@ -74,4 +76,4 @@ server.js
         }
     })
 
-- [x] server need to be standAlone as client
+- [ ] server need to be standAlone as client

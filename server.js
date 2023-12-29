@@ -32,7 +32,7 @@ let socketing = {
 	users:null,
 	prevRoom:false,
 	socket:false,
-	leaveRoom:function (name){
+	leaveRoom:function ({id , name}){
 		if (this.prevRoom) {
 			
 			this.socket.leave(this.prevRoom)
@@ -46,12 +46,12 @@ let socketing = {
 			// remove player for all users in prevroom
 			io.to(this.prevRoom).emit(
 				'removePlayerFromRoom',
-				{name:name}
+				{id:id,name:name}
 			)
 			// remove player in prevroom
 			this.socket.emit(
 				'removePlayerFromRoom',
-				{name:name}
+				{id:id,name:name}
 			)
 			this.updatePrevRoomUserList()
 		}
@@ -64,34 +64,17 @@ let socketing = {
 	},
 	init:function (socket){
 		this.socket = socket
-		// const user = UsersState.getUsers(socket.id);
-		// console.log(`User ${socket.id} connected`)
-		// console.log('AllActiveRooms',UsersState.getAllActiveRooms())
-		// console.log('Users',user)
 		this.sendMessageToPlayer(`[${UsersState.getTime()}][Server] Welcome to BorderLines`)
 	},
 	sendMessageToPlayer:function (message){
 		this.socket.emit('message',message,)
 	},
-	// sendMessageToRoom:function ({ name, message}){
-
-	// 	console.log('--WWWWWWWWWWWWW----',this.user)
-	// 	console.log('---------',this.socket.id)
-	// 	const user = UsersState.getUser(this.socket.id)
-	// 	const room = this.user.room
-	// 	name = this.user.name
-	// 	if (room) {
-	// 		io.to(room).emit('message', UsersState.buildMsg(name, message, room))
-	// 	}
-	// },
 	sendPlayerMessageToRoom:function (datas){
 		
 		console.log('----MESSAGE receive from FROM ---------------')
 		console.log(datas)
 		const user = UsersState.getUser(datas.socketId)
 		if(user && datas && datas.name && datas.room && datas.text){
-			console.log('---- user ok  ---------------')
-			console.log(user)
 			const room = user.room
 			const name = user.name
 			if(name === datas.name && room === datas.room){
@@ -107,7 +90,6 @@ let socketing = {
 io.on('connection', (socket) => {
 	socketing.init(socket)
 	// Upon connection - only to user 
-	
 	// socket.on('checkName', ({ name, room }) => {
 
 	// })
@@ -116,7 +98,7 @@ io.on('connection', (socket) => {
 		socketing.prevRoom = UsersState.getUser(socket.id)?.room
 
 		// leave previous room if prevRoom
-		if (socketing.prevRoom) socketing.leaveRoom()
+		if (socketing.prevRoom) socketing.leaveRoom({id:socket.id,name:socket.name})
 
 		socketing.user = UsersState.activateUserInNewRoom(socket.id, name, room)
 		socketing.users = UsersState.getUsersInRoom(socketing.user.room)
@@ -153,33 +135,29 @@ io.on('connection', (socket) => {
 
 	// newuserposition
 	socket.on('newuserposition', (data) => {
-		console.log('-----#------------------#---------------#---------------');
 		const pos = data.pos;
-		const name = data.name;
-		console.log(data,name);
+		// const name = data.name;
 		// no check
 		// no verif
 		// nothing
 		UsersState.setUserPos(socket.id,pos);
-		// UsersState.users.forEach(element => {
-		// 	console.log(element.name,element.datas.pos)
-		// });
+		
+		const usersCount = UsersState.getUsersInRoom(socketing.user.room).length
 
-		// send player pos to all player in the room
-		// io.to(socketing.user.room).emit('updPlayerByName', {
-		// 	name: name,
-		// 	pos: pos
-		// })
-		io.to(socketing.user.room).emit('updPlayerById', {
-			id: socket.id,
-			pos: pos
-		})
+		if(usersCount > 1){
+			io.to(socketing.user.room).emit('updPlayerById', {
+				id: socket.id,
+				pos: pos
+			})
+		}
 	})
 
 	// When user disconnects - to all others 
 	socket.on('disconnect', () => {
 		const user = UsersState.getUser(socket.id)
+		if (socketing.prevRoom) socketing.leaveRoom({id:socket.id,name:socket.name})
 		UsersState.userLeavesApp(socket.id)
+
 
 		if (user) {
 			io.to(user.room).emit('message', `[${UsersState.getTime()}][${user.room}][${user.name}]  has left the room`)

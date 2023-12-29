@@ -37,7 +37,10 @@ export class Game {
 		_players.addTeamMate(this.users[user.id])
 	}
 	removeTeamPlayer = function (user) {
-		console.log('removeTeamPlayer ', user.name)
+		let player = _players.players[user.id]
+		player.mesh.geometry.dispose();
+        player.mesh.material.dispose();
+        _scene.scene.remove(player.mesh);
 		delete this.users[user.id]
 	}
 
@@ -45,12 +48,6 @@ export class Game {
 		this.user = user
 		if (_scene.cube === null) _scene._playerInit(this.callBackFunction)
 	}
-	// initOtherPlayers = function (users){
-	// 	console.log('------------------CREATION ---------------------------')
-	// 	console.table(this.users)
-	// 	// this.user = user
-	// 	// if(_scene.cube===null) _scene._playerInit(this.callBackFunction)
-	// }
 	init = function (datas) {
 		console.log('game initiated')
 		console.log(datas)
@@ -62,26 +59,18 @@ export class Game {
 		// this.socket = socket;
 		this.callBackFunction = callBackFunction;
 
-		console.log(this.callBackFunction)
-
-
-		// console.log(VRButton)
 
 		_stats.init()
 		this.Controls = new Controls();
 		_scene.init();
 
-		// _cubes.init()
-
-		// later
-		// this._deck = new _Deck()
-		// this._deck.init();
-
 		// later
 		// this.LoadingManager.setScene(this._scene)
 		// this.LoadingManager.loadThemAll()
 
-		this.addVRButton();
+		// this.addVRButton();
+		// console.log(VRButton)
+
 		this.addEventsListeners();
 		this._START();
 	};
@@ -99,7 +88,6 @@ export class Game {
 	};
 	_START() {
 		console.log("STARTED");
-		// console.log(_scene.scene.children.length)
 		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);
 		this._REFRESH();
 	}
@@ -131,10 +119,9 @@ export class Game {
 		_cameras.currentPack.camera.updateProjectionMatrix();
 		this.Controls._get_intersectionColorChange()
 
+		// PLAYER CUBE UPDATE
 		if (_player.cube) _player.cube.checkControls(this.Controls);
 
-		// _scene.cube.updt()
 		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);
-		// this.Controls.update()
 	};
 }
