@@ -21,33 +21,6 @@ export let _cubes = {
 			autonomie:{cur:new Number(0),max:new Number(1000)},
 			birthDate:new Date(),
 	},
-	// player:function(){
-		
-	// 	this.cube.updt = function () {
-
-	// 		let minx = -5 - (this.sizes.x / 2), maxx = 5 + (this.sizes.x / 2);
-	// 		let miny = -5 - (this.sizes.y / 2), maxy = 5 + (this.sizes.y / 2);
-
-	// 		if (this.position.x > maxx && this.velocity.x > 0) this.velocity.x = -1;
-	// 		if (this.position.y > maxx && this.velocity.y > 0) this.velocity.y = -1;
-	// 		if (this.position.x < minx && this.velocity.x < 0) this.velocity.x = 1;
-	// 		if (this.position.y < minx && this.velocity.y < 0) this.velocity.y = 1;
-
-	// 		this.velocity.x = (this.position.x > maxx || this.position.x < minx)
-	// 			? this.velocity.x = (this.position.x > maxx) ? -1 : 1
-	// 			: 0;
-	// 		this.velocity.y = (this.position.y > maxx || this.position.y < minx)
-	// 			? this.velocity.y = (this.position.y > maxx) ? -1 : 1
-	// 			: 0;
-				
-	// 		if (this.velocity.x != 0) {
-	// 			this.position.x += this.velocity.x * this.speedRatio;
-	// 		}
-	// 		if (this.velocity.y != 0) {
-	// 			this.position.y += this.velocity.y * this.speedRatio;
-	// 		}
-	// 	}
-	// },
 	add: function () {
 		let datas = {
 			velocity:new THREE.Vector3(0, 0, 0),

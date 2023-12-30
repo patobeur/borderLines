@@ -19,14 +19,24 @@ export let Core = {
 	roomList: document.getElementById('roomscontainer'),
 	activity: document.getElementById('activity'),
 	// msgInput: document.getElementById('message'),
-	colorInput: document.getElementById('couleur'),
-	nameInput: document.getElementById('name'),
 	chatRoom: document.getElementById('room'),
 	// sendForm: document.getElementById('formsender'),
 	joinForm: document.getElementById('formjoin'),
 	joinButtonA: document.getElementById('joina'),
 	joinButtonB: document.getElementById('joinb'),
 	joinButtonC: document.getElementById('joinc'),
+	// ------------------------------------------------
+	colorInput: document.getElementById('couleur'),
+	nameInput: document.getElementById('name'),
+	// name
+	randomname: document.getElementById('randomname'),
+	// color
+	randomcolor: document.getElementById('randomcolor'),
+	// models
+	frontclass: document.getElementById('frontclass'),
+	backclass: document.getElementById('backclass'),
+	supportclass: document.getElementById('supportclass'),
+
 	init(datas) {
 
 		_console.init();
@@ -83,45 +93,48 @@ export let Core = {
 	},
 	getAName() {
 		this.nameInput.value = _names.getAName()
-		this.getAColor()
 	},
 	getAColor() {
 		this.colorInput.value = _colors.getAColor()
 	},
 	addListener: function () {
 		if (this.nameInput.value === '') this.getAName()
-
+		
+		this.randomcolor.addEventListener('click', (e) => {
+			this.getAColor()
+		});
+		this.randomname.addEventListener('click', (e) => {
+			this.getAName()
+		});
+		// ecoute les envois de message
 		this.sendForm.addEventListener('submit', (e) => {
 			e.preventDefault()
 			this.sendPlayerMessageToRoom()
-		}),
-			// this.joinForm.addEventListener('submit', (e) => {
-			// 	if (this.nameInput.value === '') {
-			// 		this.getAName()
-			// 	}
-			// 	e.preventDefault()
-			// }),
-			this.joinButtonA.addEventListener('click', (e) => {
-				e.preventDefault()
-				if (this.nameInput.value != '') {
-					this.sendEnterRoom('A')
-				}
-				else this.getAName()
-			}),
-			this.joinButtonB.addEventListener('click', (e) => {
-				e.preventDefault()
-				if (this.nameInput.value != '') {
-					this.sendEnterRoom('B')
-				}
-				else this.getAName()
-			}),
-			this.joinButtonC.addEventListener('click', (e) => {
-				e.preventDefault()
-				if (this.nameInput.value != '') {
-					this.sendEnterRoom('C')
-				}
-				else this.getAName()
-			})
+		});
+		this.joinForm.addEventListener('submit', (e) => {
+			e.preventDefault()
+		});
+		this.joinButtonA.addEventListener('click', (e) => {
+			e.preventDefault()
+			if (this.nameInput.value != '') {
+				this.sendEnterRoom('A')
+			}
+			else this.getAName()
+		});
+		this.joinButtonB.addEventListener('click', (e) => {
+			e.preventDefault()
+			if (this.nameInput.value != '') {
+				this.sendEnterRoom('B')
+			}
+			else this.getAName()
+		});
+		this.joinButtonC.addEventListener('click', (e) => {
+			e.preventDefault()
+			if (this.nameInput.value != '') {
+				this.sendEnterRoom('C')
+			}
+			else this.getAName()
+		})
 		// this.msgInput.addEventListener('keypress', () => {
 		// 	if (this.user.name) {
 		// 		console.log(this.user.name, "ca ecris")

@@ -2,44 +2,51 @@ import * as THREE from "three";
 import { _scene } from "./scenes.js";
 import { Controls } from "./Controls.js";
 export let _players = {
-	player: null,
+	models:{
+		un:{name:'un',size:{x:.5,y:.5,z:.5}},
+		deux:{name:'deux',size:{x:1,y:1,z:1}},
+		trois:{name:'trois',size:{x:1,y:1,z:1}},
+	},
+	player:false,
 	players: {},
 	counterPlayers: {},
-	init: function (player,callBackFunction) {
+	init: function (user,callBackFunction) {
 		this.callBackFunction=callBackFunction
-		this.addPlayer(player)
+		this.addPlayer(user)
 	},
 	addPlayer: function (user) {
+
 		let mesh = this.getACube(user)
 		this.player = {
 			user: user,
 			mesh: mesh
 		}
-		console.log('------------------------------',user)
 		this.player.mesh.futurPosition = new THREE.Vector3(0, 0, 0)
-		this.player.mesh.checkControls = (Controls) => {
-			if (Controls.left) this.player.mesh.futurPosition.x = this.player.mesh.position.x - this.player.mesh.speedRatio;
-			if (Controls.right) this.player.mesh.futurPosition.x = this.player.mesh.position.x + this.player.mesh.speedRatio;
-			if (Controls.up) this.player.mesh.futurPosition.y = this.player.mesh.position.y + this.player.mesh.speedRatio;
-			if (Controls.down) this.player.mesh.futurPosition.y  = this.player.mesh.position.y - this.player.mesh.speedRatio;
+		let pm = this.player.mesh
+		pm.checkControls = (Controls) => {
+			if (Controls.left) pm.futurPosition.x = pm.position.x - pm.speedRatio;
+			if (Controls.right) pm.futurPosition.x = pm.position.x + pm.speedRatio;
+			if (Controls.up) pm.futurPosition.y = pm.position.y + pm.speedRatio;
+			if (Controls.down) pm.futurPosition.y  = pm.position.y - pm.speedRatio;
 
 			if (Controls.left || Controls.right || Controls.up || Controls.down){
-				if(this.player.mesh.futurPosition != this.player.mesh.position){
-					let minx = -(_scene.floor.size.x/2) + (this.player.mesh.size.x / 2);
-					let maxx = (_scene.floor.size.x/2) - (this.player.mesh.size.x / 2);
-					let miny = -(_scene.floor.size.y/2) - (this.player.mesh.size.y / 2);
-					let maxy = (_scene.floor.size.y / 2) + (this.player.mesh.size.y / 2);
-					if (!(this.player.mesh.futurPosition.x > maxx) &&
-						!(this.player.mesh.futurPosition.x < minx) &&
-						!(this.player.mesh.futurPosition.y > maxy) &&
-						!(this.player.mesh.futurPosition.y < miny)) {
-							this.player.mesh.update(this.player.mesh.futurPosition)
-							this.callBackFunction.sendPlayerDatas(this.player.mesh.futurPosition)
+				if(pm.futurPosition != pm.position){
+					let minx = -(_scene.floor.size.x/2) + (pm.size.x / 2);
+					let maxx = (_scene.floor.size.x/2) - (pm.size.x / 2);
+					let miny = -(_scene.floor.size.y/2) - (pm.size.y / 2);
+					let maxy = (_scene.floor.size.y / 2) + (pm.size.y / 2);
+					if (!(pm.futurPosition.x > maxx) &&
+						!(pm.futurPosition.x < minx) &&
+						!(pm.futurPosition.y > maxy) &&
+						!(pm.futurPosition.y < miny)) {
+							pm.update(pm.futurPosition)
+							// send to server
+							this.callBackFunction.sendPlayerDatas(pm)
 					}
 				}
 			}
 		}
-
+		_scene.scene.add(pm);
 	},
 	addTeamMate: function (user) {
 		console.log('user',user)
@@ -52,26 +59,33 @@ export let _players = {
 		_scene.scene.add(this.players[user.id].mesh);
 	},
 	getACube: function (user) {
+		
+		user.model = this.models['un']
 		// let color = '0x' + user.couleur.substring(1)
 		let color = user.couleur
-		let size = new THREE.Vector3(.5, .5, .5)
+		let size = new THREE.Vector3(user.model.size.x, user.model.size.y, user.model.size.z)
+
 		const cubeGeometry = new THREE.BoxGeometry(size.x, size.y, size.z);
 		const cubeMaterial = new THREE.MeshPhongMaterial({ color: color });
 
-		const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-		cube.name = 'CUBE_'+user.name;
-		cube.size = size
-		cube.position.z = cube.size.z / 2
-		cube.velocity = new THREE.Vector3(1, 0, 0)
-		cube.speedRatio = .1
-		cube.hover = false
+		const mesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
+		mesh.name = 'CUBE_'+user.name;
+		mesh.size = size
+		// mesh.position.z = mesh.size.z / 2
+		mesh.velocity = new THREE.Vector3(1, 0, 0)
+		mesh.speedRatio = .1
+		mesh.hover = false
 
-		cube.update = (pos) => {
-			cube.position.copy(pos)
+		mesh.update = (pos) => {
+			let posf = new THREE.Vector3(0,0,0)
+			posf.copy(pos)
+			mesh.position.x=posf.x
+			mesh.position.y=posf.y
+			mesh.position.z=posf.z
 		}
 
-		cube.castShadow = true;
-		cube.receiveShadow = true;
-		return cube
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		return mesh
 	},
 }

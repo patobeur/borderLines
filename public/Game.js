@@ -6,15 +6,11 @@ import { _soleil } from "./js/soleil.js";
 // import { LoadingManager } from "./mecanics/LoadingManager.js";
 import { Controls } from "./js/Controls.js";
 
-// later
-// import { _Deck } from "./mecanics/deck.js";
-
 // functions
-// import { _cubes } from "../functions/cubes.js";
+// import { _cubes } from "./js/cubes.js";
 import { _cameras } from "./js/cameras.js";
 import { _stats } from "./js/stats.js";
 import { _scene } from "./js/scenes.js";
-import { _player } from "./js/player.js";
 import { _players } from "./js/players.js";
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 
@@ -25,7 +21,6 @@ export class Game {
 	user = false;
 	// socket= false;
 	users = {};
-	rooms = {};
 
 	// later
 	// LoadingManager = new LoadingManager();
@@ -47,18 +42,11 @@ export class Game {
 
 	initPlayer = function (user) {
 		this.user = user
-		if (_scene.cube === null) _player.init(this.user,this.callBackFunction)
+		if (!_players.player) _players.init(this.user,this.callBackFunction)
 		// if (_scene.cube === null) _scene._playerInit(this.callBackFunction)
 	}
 	init = function (datas) {
-		console.log('game initiated')
-		console.log(datas)
-		// let { user, users, rooms, socket, callBackFunction } = datas
 		let { callBackFunction } = datas
-		// this.user = user;
-		// this.users = users;
-		// this.rooms = rooms;
-		// this.socket = socket;
 		this.callBackFunction = callBackFunction;
 
 
@@ -75,6 +63,7 @@ export class Game {
 
 		this.addEventsListeners();
 		this._START();
+		console.log('game _START')
 	};
 	addVRButton = () => {
 		document.body.appendChild(VRButton.createButton(_scene.renderer));
@@ -110,9 +99,9 @@ export class Game {
 
 		_soleil.rotation()
 
-		if (_player.cube) {
-			_cameras.lookAtCenter(_player.cube.position)
-			_cameras.followaAt(_player.cube.position)
+		if (_players.player) {
+			_cameras.lookAtCenter(_players.player.mesh.position)
+			_cameras.followaAt(_players.player.mesh.position)
 		}
 		else {
 			_cameras.lookAtCenter(new THREE.Vector3(0, 0, 0))
@@ -122,7 +111,7 @@ export class Game {
 		this.Controls._get_intersectionColorChange()
 
 		// PLAYER CUBE UPDATE
-		if (_player.cube) _player.cube.checkControls(this.Controls);
+		if (_players.player) _players.player.mesh.checkControls(this.Controls);
 
 		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);
 	};

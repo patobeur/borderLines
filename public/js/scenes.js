@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { _cameras } from "./cameras.js";
 import { _console } from "./console.js";
 import { _soleil } from "./soleil.js";
-import { _player } from "./player.js";
 export let _scene = {
 	scene: null,
 	renderer: null,
@@ -23,14 +22,15 @@ export let _scene = {
 			},
 			floor: () => {
 				// Ajouter un cube au milieu de la scène
-				let cubesize = .5 * 11;
-				const floorSize = { x:cubesize, y:cubesize, z: 0.1 }
-				const floorGeometry = new THREE.BoxGeometry(floorSize.x, floorSize.y, floorSize.z);
+				let cubeside = 10.5;
+				let size = { x:cubeside, y:cubeside, z: 1 }
+				const floorGeometry = new THREE.BoxGeometry(size.x, size.y, size.z);
 				const floorMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
 				// const floorMaterial = new THREE.MeshBasicMaterial({ color: 0xdedede });
 				this.floor = new THREE.Mesh(floorGeometry, floorMaterial);
-				this.floor.position.set(0, 0, -0.05)
-				this.floor.size = floorSize;
+				// this.floor.position.set(0, 0, -1)
+				this.floor.size = {  x:size.x, y:size.y, z: size.z }
+				this.floor.position.z = -1
 				this.floor.name = 'floor';
 				this.floor.castShadow = true;
 				this.floor.receiveShadow = true;
@@ -109,13 +109,8 @@ export let _scene = {
 		cube.receiveShadow = true;
 		this.scene.add(cube);
 	},
-	// _playerInit:function (callBackFunction)  {
-	// 	_player.init(callBackFunction)
-	// 	// this.cube = _player.cube
-	// },
 	init: function () {
 		this._setThemAll();
-		// this._setplayer();
 	},
 };
 

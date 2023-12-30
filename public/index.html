@@ -25,15 +25,29 @@
 		<div id="joincontainer" class="join-container">
 
 			<form id="formjoin" class="form-join">
-				<input id="name" value="" type="texte" maxlength="8" placeholder="Votre nom de scene" size="5"
-					required class="mess mess-name" data-type="name">
+				<div id="inputname-container">
+					<input class="mess mess-name" id="name" value="" type="texte" maxlength="8" placeholder="Votre nom de scene" size="5" required data-type="name">
+					<button id="randomname" class="recycle">♻️</button>
+				</div>
 					
-				<!-- Champ de couleur -->
-					<input type="color" id="couleur" name="couleur" autocomplete="on">
+				<div id="inputcolor-container">
+					<input type="color" id="couleur" class="mess-couleur" name="couleur" autocomplete="on">
+					<button id="randomcolor" class="recycle">♻️</button>
+				</div>
 
-				<button id="joina" type="submit" class="mess mess-what" data-type="what">Join Room A</button>
-				<button id="joinb" type="submit" class="mess mess-what" data-type="what">Join Room B</button>
-				<button id="joinc" type="submit" class="mess mess-what" data-type="what">Join Room C</button>
+				<div id="inputmodel-container">
+					<div class="models-container">
+						<div id="frontclass" class="mess mess-model" data-type="front">Front</div>
+						<div id="backclass" class="mess mess-model" data-type="back">Back</div>
+						<div id="supportclass" class="mess mess-model" data-type="support">Support</div>
+					</div>
+				</div>
+
+				<div id="inputjoin-container">
+					<button id="joina" type="submit" class="mess mess-what" data-type="what">Join Room A</button>
+					<button id="joinb" type="submit" class="mess mess-what" data-type="what">B</button>
+					<button id="joinc" type="submit" class="mess mess-what" data-type="what">C</button>
+				</div>
 			</form>
 
 		</div>

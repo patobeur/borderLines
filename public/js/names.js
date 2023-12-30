@@ -10,7 +10,7 @@ export let _names = {
 		['K', 0.05],['W', 0.04],['X', 0.03],['Y', 0.03],['Z', 0.01],
 	],
 	donneUneLettre:function () {
-		// Cchoisir la lettre en fonction de sa fréquence 
+		// Choisir la lettre en fonction de sa fréquence 
 		const frequenceTotal = this.lettreParFrequences.reduce((sum, [lettre, frequence]) => sum + frequence, 0)
 		const randomValue = Math.random() * frequenceTotal
 		let cumulativefrequence = 0
