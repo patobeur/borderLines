@@ -5,8 +5,7 @@ multiple users tests, again...
 ## start server
 
     npm install
-    npm start
-    npm run dev (for nodemon)
+    npm start or npm run dev (for nodemon)
 
     open index.html with "Live Server" for client
 
