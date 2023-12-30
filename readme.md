@@ -25,9 +25,9 @@ less than before but still a lot of missing functionalities ...
 ### packages
     
     {
-        "name": "messup",
+        "name": "bordelines",
         "version": "1.0.0",
-        "description": "",
+        "description": "multi-user testing with socket.io",
         "main": "server.js",
         "type": "module",
         "scripts": {
@@ -45,6 +45,7 @@ less than before but still a lot of missing functionalities ...
             "nodemon": "^3.0.2"
         }
     }
+
 
 ### Front imports ( client side )
 
