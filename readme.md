@@ -67,7 +67,6 @@ server.js
     const io = new Server(expressServer, {
         cors: {
             origin: process.env.NODE_ENV === "production" ? false : [
-                "http://192.168.17.125:3500", // locallan ip to make it fun
                 "http://localhost:5500",
                 "http://127.0.0.1:5500"
             ]
@@ -75,3 +74,9 @@ server.js
     })
 
 - [ ] server need to be standAlone as client
+
+
+### add your local ip to *main.js* ( client side )
+
+    import { Core } from "./mainCore.js";
+    Core.init({socket:io('ws://192.168.17.125:3500')})
