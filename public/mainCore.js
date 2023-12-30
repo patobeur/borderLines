@@ -1,6 +1,8 @@
 import { Game } from "./Game.js";
 import { _console } from "./js/console.js";
 import { _front } from "./js/front.js";
+import { _names } from "./js/names.js";
+import { _colors } from "./js/colors.js";
 import { _players } from "./js/players.js";
 export let Core = {
 	GAME: new Game(),
@@ -17,6 +19,7 @@ export let Core = {
 	roomList: document.getElementById('roomscontainer'),
 	activity: document.getElementById('activity'),
 	// msgInput: document.getElementById('message'),
+	colorInput: document.getElementById('couleur'),
 	nameInput: document.getElementById('name'),
 	chatRoom: document.getElementById('room'),
 	// sendForm: document.getElementById('formsender'),
@@ -54,6 +57,7 @@ export let Core = {
 		if (this.nameInput.value != '') {
 			this.socket.emit('enterRoom', {
 				name: this.nameInput.value,
+				couleur: this.colorInput.value,
 				room: room
 			})
 		}
@@ -77,31 +81,46 @@ export let Core = {
 	messageRecuConsole: function (message) {
 		_console.log(`messageRecuConsole ${message}`)
 	},
+	getAName() {
+		this.nameInput.value = _names.getAName()
+		this.getAColor()
+	},
+	getAColor() {
+		this.colorInput.value = _colors.getAColor()
+	},
 	addListener: function () {
+		if (this.nameInput.value === '') this.getAName()
+
 		this.sendForm.addEventListener('submit', (e) => {
 			e.preventDefault()
 			this.sendPlayerMessageToRoom()
 		}),
-			this.joinForm.addEventListener('submit', (e) => {
-				e.preventDefault()
-			}),
+			// this.joinForm.addEventListener('submit', (e) => {
+			// 	if (this.nameInput.value === '') {
+			// 		this.getAName()
+			// 	}
+			// 	e.preventDefault()
+			// }),
 			this.joinButtonA.addEventListener('click', (e) => {
 				e.preventDefault()
 				if (this.nameInput.value != '') {
 					this.sendEnterRoom('A')
 				}
+				else this.getAName()
 			}),
 			this.joinButtonB.addEventListener('click', (e) => {
 				e.preventDefault()
 				if (this.nameInput.value != '') {
 					this.sendEnterRoom('B')
 				}
+				else this.getAName()
 			}),
 			this.joinButtonC.addEventListener('click', (e) => {
 				e.preventDefault()
 				if (this.nameInput.value != '') {
 					this.sendEnterRoom('C')
 				}
+				else this.getAName()
 			})
 		// this.msgInput.addEventListener('keypress', () => {
 		// 	if (this.user.name) {
@@ -236,7 +255,6 @@ export let Core = {
 			this.usersOld = {}
 			this.user = paquet.user
 			this.users = paquet.users
-			// this.refreshUsersListInRoom(this.users)
 			const log = paquet.message
 			// let newpaquet = {
 			// 	name:this.user.name,
@@ -246,7 +264,6 @@ export let Core = {
 			// }
 			this.joinContainer.classList.add('ok')
 			this.joinContainer.remove()
-			_console.log(log)
 
 			// initialization
 			this.GAME.initPlayer(this.user)

@@ -19,12 +19,13 @@ export const UsersState = {
 			time: this.getTime()
 		}
 	},
-	activateUserInNewRoom: function (id, name, room) {
+	activateUserInNewRoom: function (id, name, couleur, room) {
 		let datas = {
 			pos : {x:0,y:0,z:0},
-			time : this.getTime()
+			time : this.getTime(),
+			couleur: couleur
 		}
-		const user = { id, name, room, datas}
+		const user = { id, name, couleur, room, datas}
 		this.setUsers([
 			...this.users.filter(user => user.id !== id),
 			user

@@ -10,11 +10,12 @@ export let _players = {
 		this.addPlayer(player)
 	},
 	addPlayer: function (user) {
-		let cube = this.getACube(user)
+		let mesh = this.getACube(user)
 		this.player = {
 			user: user,
-			mesh: cube
+			mesh: mesh
 		}
+		console.log('------------------------------',user)
 		this.player.mesh.futurPosition = new THREE.Vector3(0, 0, 0)
 		this.player.mesh.checkControls = (Controls) => {
 			if (Controls.left) this.player.mesh.futurPosition.x = this.player.mesh.position.x - this.player.mesh.speedRatio;
@@ -41,18 +42,21 @@ export let _players = {
 
 	},
 	addTeamMate: function (user) {
-		let cube = this.getACube(user)
+		console.log('user',user)
+		let mesh = this.getACube(user)
 		this.counterPlayers++
 		this.players[user.id] = {
 			user: user,
-			mesh: cube
+			mesh: mesh
 		}
 		_scene.scene.add(this.players[user.id].mesh);
 	},
 	getACube: function (user) {
+		// let color = '0x' + user.couleur.substring(1)
+		let color = user.couleur
 		let size = new THREE.Vector3(.5, .5, .5)
 		const cubeGeometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-		const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF00 });
+		const cubeMaterial = new THREE.MeshPhongMaterial({ color: color });
 
 		const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 		cube.name = 'CUBE_'+user.name;

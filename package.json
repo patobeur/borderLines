@@ -1,7 +1,7 @@
 {
-	"name": "messup",
+	"name": "bordelines",
 	"version": "1.0.0",
-	"description": "",
+	"description": "multi-user testing",
 	"main": "server.js",
 	"type": "module",
 	"scripts": {

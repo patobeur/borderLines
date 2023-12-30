@@ -34,7 +34,7 @@ export class Game {
 	addTeamPlayer = function (user) {
 		console.log('addTeamPlayer ', user.name)
 		this.users[user.id] = user
-		_players.addTeamMate(this.users[user.id])
+		_players.addTeamMate(user)
 	}
 	removeTeamPlayer = function (user) {
 		let player = _players.players[user.id]
@@ -42,11 +42,13 @@ export class Game {
         player.mesh.material.dispose();
         _scene.scene.remove(player.mesh);
 		delete this.users[user.id]
+		delete _players.players[user.id]
 	}
 
 	initPlayer = function (user) {
 		this.user = user
-		if (_scene.cube === null) _scene._playerInit(this.callBackFunction)
+		if (_scene.cube === null) _player.init(this.user,this.callBackFunction)
+		// if (_scene.cube === null) _scene._playerInit(this.callBackFunction)
 	}
 	init = function (datas) {
 		console.log('game initiated')
