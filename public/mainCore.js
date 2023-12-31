@@ -53,6 +53,7 @@ export let Core = {
 			// socket: this.socket,
 			callBackFunction: {
 				sendPlayerDatas: (player) => {
+					console.log('callBackFunction', player)
 					let newPaquet = {
 						name: player.user.name,
 						id: player.user.id,
@@ -108,6 +109,9 @@ export let Core = {
 			let color = _colors.getAColor()
 			_model.setModelColor(color.rgb)
 			this.colorInput.value = color.hex
+		});
+		this.colorInput.addEventListener('input', ()=>{
+			_model.setModelColor(this.colorInput.value)
 		});
 		this.randomname.addEventListener('click', (e) => {
 			this.nameInput.value = _names.getAName()
@@ -242,9 +246,9 @@ export let Core = {
 			}, 3000)
 		})
 		this.socket.on('updPlayerById', (datas) => {
+			console.log('updPlayerById', datas)
 			let { id, pos } = datas
 			if (this.socket.id != id) {
-				console.log('updPlayerById', datas)
 				_players.players[id].mesh.update(pos)
 			}
 		})

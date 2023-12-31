@@ -40,8 +40,21 @@ export let _players = {
 						!(pm.futurPosition.y > maxy) &&
 						!(pm.futurPosition.y < miny)) {
 
+						// pm.update(pm.futurPosition)
+
+
+						
+			console.log('i move to ',pm.futurPosition)
+
+			let posf = new THREE.Vector3(0, 0, 0)
+			posf.copy(pm.futurPosition)
+			mesh.position.x = posf.x
+			mesh.position.y = posf.y
+			mesh.position.z = posf.z
+
+
+
 						this.player.user.datas.pos = pm.futurPosition
-						pm.update(pm.futurPosition)
 						// send to server
 						// console.log('send callback ', this.player)
 						this.callBackFunction.sendPlayerDatas(this.player)
@@ -79,12 +92,13 @@ export let _players = {
 		mesh.size = size
 		// mesh.position.z = mesh.size.z / 2
 		// mesh.velocity = new THREE.Vector3(1, 0, 0)
-		// mesh.speedRatio = .1
+		mesh.speedRatio = .1
 		mesh.hover = false
 
-		mesh.update = (player) => {
+		mesh.update = (pos) => {
+			console.log('move',pos)
 			let posf = new THREE.Vector3(0, 0, 0)
-			posf.copy(player)
+			posf.copy(pos)
 			mesh.position.x = posf.x
 			mesh.position.y = posf.y
 			mesh.position.z = posf.z

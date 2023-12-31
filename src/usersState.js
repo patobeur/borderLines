@@ -37,9 +37,9 @@ export const UsersState = {
 			this.users.filter(user => user.id !== id)
 		)
 	},
-	setUserPos: function (id,data) {
+	setUserPos: function (id,pos) {
 		let user =  this.users.find(user => user.id === id)
-		user.datas.pos = data
+		user.datas.pos = pos
 	},
 	getUser: function (id) {
 		return this.users.find(user => user.id === id)

@@ -129,6 +129,7 @@ io.on('connection', (socket) => {
 
 	// newuserposition
 	socket.on('newuserposition', (data) => {
+		console.log('newuserposition',data.name, data.pos)
 		const pos = data.pos;
 		const other = data.other;
 		// const name = data.name;
