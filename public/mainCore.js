@@ -53,7 +53,7 @@ export let Core = {
 			// socket: this.socket,
 			callBackFunction: {
 				sendPlayerDatas: (player) => {
-					console.log('callBackFunction', player)
+					console.log('send to server', player)
 					let newPaquet = {
 						name: player.user.name,
 						id: player.user.id,
@@ -246,7 +246,7 @@ export let Core = {
 			}, 3000)
 		})
 		this.socket.on('updPlayerById', (datas) => {
-			console.log('updPlayerById', datas)
+			console.log('from server ', datas)
 			let { id, pos } = datas
 			if (this.socket.id != id) {
 				_players.players[id].mesh.update(pos)
