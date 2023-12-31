@@ -1,8 +1,6 @@
 export const UsersState = {
 	users: [],
 	setUsers: function (newUsersArray) {
-		console.log('newUsersArray')
-		console.log(newUsersArray)
 		this.users = newUsersArray
 	},
 	getTime: function(){
@@ -26,6 +24,8 @@ export const UsersState = {
 			couleur: couleur
 		}
 		const user = { id, name, couleur, room, datas}
+		console.log('newUserINRoom')
+		console.log(user)
 		this.setUsers([
 			...this.users.filter(user => user.id !== id),
 			user

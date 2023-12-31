@@ -8,9 +8,10 @@ export let _colors = {
 		const greenHex = green.toString(16).padStart(2, '0');
 		const blueHex = blue.toString(16).padStart(2, '0');
 	  
-		const couleur = `#${redHex}${greenHex}${blueHex}`;
-	  
-		return couleur;
+		const couleurHex = `#${redHex}${greenHex}${blueHex}`;
+		const couleurRgb = `rgb(${red},${green},${blue})`;
+
+		return {hex:couleurHex,rgb:couleurRgb};
 	},
 	getAColor: function () {
 		return this.donneUneCouleur();

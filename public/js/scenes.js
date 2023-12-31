@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { _cameras } from "./cameras.js";
 import { _console } from "./console.js";
 import { _soleil } from "./soleil.js";
+import { _model } from "./models.js";
 export let _scene = {
 	scene: null,
 	renderer: null,

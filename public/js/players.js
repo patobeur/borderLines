@@ -2,16 +2,16 @@ import * as THREE from "three";
 import { _scene } from "./scenes.js";
 import { Controls } from "./Controls.js";
 export let _players = {
-	models:{
-		un:{name:'un',size:{x:.5,y:.5,z:.5}},
-		deux:{name:'deux',size:{x:1,y:1,z:1}},
-		trois:{name:'trois',size:{x:1,y:1,z:1}},
+	models: {
+		un: { name: 'un', size: { x: .5, y: .5, z: .5 } },
+		deux: { name: 'deux', size: { x: 1, y: 1, z: 1 } },
+		trois: { name: 'trois', size: { x: 1, y: 1, z: 1 } },
 	},
-	player:false,
+	player: false,
 	players: {},
 	counterPlayers: {},
-	init: function (user,callBackFunction) {
-		this.callBackFunction=callBackFunction
+	init: function (user, callBackFunction) {
+		this.callBackFunction = callBackFunction
 		this.addPlayer(user)
 	},
 	addPlayer: function (user) {
@@ -21,27 +21,30 @@ export let _players = {
 			user: user,
 			mesh: mesh
 		}
-		this.player.mesh.futurPosition = new THREE.Vector3(0, 0, 0)
 		let pm = this.player.mesh
+		pm.futurPosition = new THREE.Vector3(0, 0, 0)
 		pm.checkControls = (Controls) => {
 			if (Controls.left) pm.futurPosition.x = pm.position.x - pm.speedRatio;
 			if (Controls.right) pm.futurPosition.x = pm.position.x + pm.speedRatio;
 			if (Controls.up) pm.futurPosition.y = pm.position.y + pm.speedRatio;
-			if (Controls.down) pm.futurPosition.y  = pm.position.y - pm.speedRatio;
+			if (Controls.down) pm.futurPosition.y = pm.position.y - pm.speedRatio;
 
-			if (Controls.left || Controls.right || Controls.up || Controls.down){
-				if(pm.futurPosition != pm.position){
-					let minx = -(_scene.floor.size.x/2) + (pm.size.x / 2);
-					let maxx = (_scene.floor.size.x/2) - (pm.size.x / 2);
-					let miny = -(_scene.floor.size.y/2) - (pm.size.y / 2);
+			if (Controls.left || Controls.right || Controls.up || Controls.down) {
+				if (pm.futurPosition != pm.position) {
+					let minx = -(_scene.floor.size.x / 2) + (pm.size.x / 2);
+					let maxx = (_scene.floor.size.x / 2) - (pm.size.x / 2);
+					let miny = -(_scene.floor.size.y / 2) - (pm.size.y / 2);
 					let maxy = (_scene.floor.size.y / 2) + (pm.size.y / 2);
 					if (!(pm.futurPosition.x > maxx) &&
 						!(pm.futurPosition.x < minx) &&
 						!(pm.futurPosition.y > maxy) &&
 						!(pm.futurPosition.y < miny)) {
-							pm.update(pm.futurPosition)
-							// send to server
-							this.callBackFunction.sendPlayerDatas(pm)
+
+						this.player.user.datas.pos = pm.futurPosition
+						pm.update(pm.futurPosition)
+						// send to server
+						// console.log('send callback ', this.player)
+						this.callBackFunction.sendPlayerDatas(this.player)
 					}
 				}
 			}
@@ -49,8 +52,11 @@ export let _players = {
 		_scene.scene.add(pm);
 	},
 	addTeamMate: function (user) {
-		console.log('user',user)
+		console.log('user', user)
 		let mesh = this.getACube(user)
+		mesh.checkmove = (datas) => {
+
+		}
 		this.counterPlayers++
 		this.players[user.id] = {
 			user: user,
@@ -59,7 +65,7 @@ export let _players = {
 		_scene.scene.add(this.players[user.id].mesh);
 	},
 	getACube: function (user) {
-		
+
 		user.model = this.models['un']
 		// let color = '0x' + user.couleur.substring(1)
 		let color = user.couleur
@@ -69,19 +75,19 @@ export let _players = {
 		const cubeMaterial = new THREE.MeshPhongMaterial({ color: color });
 
 		const mesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
-		mesh.name = 'CUBE_'+user.name;
+		mesh.name = 'CUBE_' + user.name;
 		mesh.size = size
 		// mesh.position.z = mesh.size.z / 2
-		mesh.velocity = new THREE.Vector3(1, 0, 0)
-		mesh.speedRatio = .1
+		// mesh.velocity = new THREE.Vector3(1, 0, 0)
+		// mesh.speedRatio = .1
 		mesh.hover = false
 
-		mesh.update = (pos) => {
-			let posf = new THREE.Vector3(0,0,0)
-			posf.copy(pos)
-			mesh.position.x=posf.x
-			mesh.position.y=posf.y
-			mesh.position.z=posf.z
+		mesh.update = (player) => {
+			let posf = new THREE.Vector3(0, 0, 0)
+			posf.copy(player)
+			mesh.position.x = posf.x
+			mesh.position.y = posf.y
+			mesh.position.z = posf.z
 		}
 
 		mesh.castShadow = true;

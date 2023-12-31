@@ -69,16 +69,11 @@ let socketing = {
 	},
 	sendPlayerMessageToRoom:function (datas){
 		
-		console.log('----MESSAGE receive from FROM ---------------')
-		console.log(datas)
 		const user = UsersState.getUser(datas.socketId)
 		if(user && datas && datas.name && datas.room && datas.text){
 			const room = user.room
 			const name = user.name
 			if(name === datas.name && room === datas.room){
-					console.log('---user------',user)
-					console.log('-this.socket.id--------',this.socket.id)
-					console.log(datas)
 					io.to(room).emit('message', `[${UsersState.getTime()}][${room}][${name}] ${datas.text}`)
 			}
 		}
@@ -87,6 +82,7 @@ let socketing = {
 }
 io.on('connection', (socket) => {
 	socketing.init(socket)
+		console.log(`User ${socket.id} CONNECTED`)
 	// Upon connection - only to user 
 	// socket.on('checkName', ({ name, room }) => {
 
@@ -134,18 +130,19 @@ io.on('connection', (socket) => {
 	// newuserposition
 	socket.on('newuserposition', (data) => {
 		const pos = data.pos;
+		const other = data.other;
 		// const name = data.name;
 		// no check
 		// no verif
 		// nothing
 		UsersState.setUserPos(socket.id,pos);
-		
 		const usersCount = UsersState.getUsersInRoom(socketing.user.room).length
 
 		if(usersCount > 1){
 			io.to(socketing.user.room).emit('updPlayerById', {
 				id: socket.id,
-				pos: pos
+				pos: pos,
+				other:other
 			})
 		}
 	})

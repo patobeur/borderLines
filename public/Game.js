@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { _console } from "./js/console.js";
 import { _soleil } from "./js/soleil.js";
+import { _model } from "./js/models.js";
 // class
 // later
 // import { LoadingManager } from "./mecanics/LoadingManager.js";
@@ -42,7 +43,10 @@ export class Game {
 
 	initPlayer = function (user) {
 		this.user = user
-		if (!_players.player) _players.init(this.user,this.callBackFunction)
+		if (!_players.player) _players.init(
+			this.user,
+			this.callBackFunction
+		)
 		// if (_scene.cube === null) _scene._playerInit(this.callBackFunction)
 	}
 	init = function (datas) {
@@ -99,6 +103,9 @@ export class Game {
 
 		_soleil.rotation()
 
+		if (_model.on) {
+			_model.model.mesh.update()
+		}
 		if (_players.player) {
 			_cameras.lookAtCenter(_players.player.mesh.position)
 			_cameras.followaAt(_players.player.mesh.position)

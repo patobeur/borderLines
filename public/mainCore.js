@@ -4,6 +4,7 @@ import { _front } from "./js/front.js";
 import { _names } from "./js/names.js";
 import { _colors } from "./js/colors.js";
 import { _players } from "./js/players.js";
+import { _model } from "./js/models.js";
 export let Core = {
 	GAME: new Game(),
 	socket: false,
@@ -51,14 +52,19 @@ export let Core = {
 			// rooms: this.rooms,
 			// socket: this.socket,
 			callBackFunction: {
-				sendPlayerDatas: (data) => {
-					this.socket.emit('newuserposition', {
-						name: this.user.name,
-						pos: data
-					})
+				sendPlayerDatas: (player) => {
+					let newPaquet = {
+						name: player.user.name,
+						id: player.user.id,
+						pos: player.user.datas.pos,
+						other:{x:1}
+					}
+					this.socket.emit('newuserposition', newPaquet)
+					// console.log('this.socket.emit(',newPaquet)
 				}
 			}
 		});
+		_model.init()
 		this.socketRun();
 	},
 	//---------------------
@@ -91,20 +97,20 @@ export let Core = {
 	messageRecuConsole: function (message) {
 		_console.log(`messageRecuConsole ${message}`)
 	},
-	getAName() {
-		this.nameInput.value = _names.getAName()
-	},
-	getAColor() {
-		this.colorInput.value = _colors.getAColor()
-	},
 	addListener: function () {
-		if (this.nameInput.value === '') this.getAName()
-		
+		if (this.nameInput.value === '') this.nameInput.value = _names.getAName()
+
+		let color = _colors.getAColor()
+		_model.setModelColor(color.rgb);
+		this.colorInput.value = color.hex;
+
 		this.randomcolor.addEventListener('click', (e) => {
-			this.getAColor()
+			let color = _colors.getAColor()
+			_model.setModelColor(color.rgb)
+			this.colorInput.value = color.hex
 		});
 		this.randomname.addEventListener('click', (e) => {
-			this.getAName()
+			this.nameInput.value = _names.getAName()
 		});
 		// ecoute les envois de message
 		this.sendForm.addEventListener('submit', (e) => {
@@ -194,6 +200,8 @@ export let Core = {
 		for (const key in users) {
 			const user = users[key];
 			if (user.id != this.user.id) {
+				console.log('-----####addNewUsers#######---------------------------')
+				console.log(this.user.name)
 				if (typeof this.GAME.users[user.id] === 'undefined') {
 					this.GAME.addTeamPlayer(user)
 				}
@@ -224,7 +232,7 @@ export let Core = {
 		this.socket.on("message", (data) => this.messageRecuConsole(data))
 
 		this.socket.on("activity", (userPaquet) => {
-			console.log(userPaquet)
+			console.log('user:',userPaquet)
 			this.activity.textContent = `${userPaquet.name} is typing... `
 
 			// Clear after 3 seconds 
@@ -236,6 +244,7 @@ export let Core = {
 		this.socket.on('updPlayerById', (datas) => {
 			let { id, pos } = datas
 			if (this.socket.id != id) {
+				console.log('updPlayerById', datas)
 				_players.players[id].mesh.update(pos)
 			}
 		})
@@ -265,6 +274,7 @@ export let Core = {
 			// this.removeThreeUser(this.users)
 		})
 		this.socket.on('welcome', (paquet) => {
+			_model.removeModel()
 			this.usersOld = {}
 			this.user = paquet.user
 			this.users = paquet.users
