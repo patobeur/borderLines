@@ -115,7 +115,8 @@ export class Game {
 			_cameras.followaAt(new THREE.Vector3(0, 0, 0))
 		}
 		_cameras.currentPack.camera.updateProjectionMatrix();
-		this.Controls._get_intersectionColorChange()
+		
+		// this.Controls._get_intersectionColorChange()
 
 		// PLAYER CUBE UPDATE
 		if (_players.player) _players.player.mesh.checkControls(this.Controls);

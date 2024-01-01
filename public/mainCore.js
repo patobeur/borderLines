@@ -53,13 +53,14 @@ export let Core = {
 			// socket: this.socket,
 			callBackFunction: {
 				sendPlayerDatas: (player) => {
-					console.log('send to server', player)
+					console.log('sendPlayerDatas:player', player)
 					let newPaquet = {
 						name: player.user.name,
 						id: player.user.id,
 						pos: player.user.datas.pos,
 						other:{x:1}
 					}
+					console.log('send to server', newPaquet)
 					this.socket.emit('newuserposition', newPaquet)
 					// console.log('this.socket.emit(',newPaquet)
 				}
@@ -71,11 +72,13 @@ export let Core = {
 	//---------------------
 	//---------------------
 	sendEnterRoom: function (room) {
+
 		if (this.nameInput.value != '') {
 			this.socket.emit('enterRoom', {
 				name: this.nameInput.value,
 				couleur: this.colorInput.value,
-				room: room
+				room: room,
+				datas:{modelName: _model.model.datas.modelName}
 			})
 		}
 		this.msgInput.focus()
@@ -116,6 +119,12 @@ export let Core = {
 		this.randomname.addEventListener('click', (e) => {
 			this.nameInput.value = _names.getAName()
 		});
+
+
+
+
+
+
 		// ecoute les envois de message
 		this.sendForm.addEventListener('submit', (e) => {
 			e.preventDefault()
@@ -145,15 +154,6 @@ export let Core = {
 			}
 			else this.getAName()
 		})
-		// this.msgInput.addEventListener('keypress', () => {
-		// 	if (this.user.name) {
-		// 		console.log(this.user.name, "ca ecris")
-
-		// 		this.socket.emit(
-		// 			'activity',
-		// 			this.user.name)
-		// 	}
-		// })
 	},
 	removeThreeUser: function (users = false) {
 		console.log('removeThreeUser')
@@ -204,8 +204,7 @@ export let Core = {
 		for (const key in users) {
 			const user = users[key];
 			if (user.id != this.user.id) {
-				console.log('-----####addNewUsers#######---------------------------')
-				console.log(this.user.name)
+				console.log('-----####addNewUsers: -',this.user.name)
 				if (typeof this.GAME.users[user.id] === 'undefined') {
 					this.GAME.addTeamPlayer(user)
 				}

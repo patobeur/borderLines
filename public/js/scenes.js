@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { _cameras } from "./cameras.js";
 import { _console } from "./console.js";
 import { _soleil } from "./soleil.js";
+import { _floors } from "./floors.js";
 import { _model } from "./models.js";
 export let _scene = {
 	scene: null,
@@ -22,30 +23,9 @@ export let _scene = {
 				// this.scene.add(axesHelper);
 			},
 			floor: () => {
-				// Ajouter un cube au milieu de la scène
-				let cubeside = 10.5;
-				let size = { x:cubeside, y:cubeside, z: 1 }
-				const floorGeometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-				const floorMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
-				// const floorMaterial = new THREE.MeshBasicMaterial({ color: 0xdedede });
-				this.floor = new THREE.Mesh(floorGeometry, floorMaterial);
-				// this.floor.position.set(0, 0, -1)
-				this.floor.size = {  x:size.x, y:size.y, z: size.z }
-				this.floor.position.z = -1
-				this.floor.name = 'floor';
-				this.floor.castShadow = true;
-				this.floor.receiveShadow = true;
+				_floors.init()
+				this.floor = _floors.floor
 				this.scene.add(this.floor);
-			},
-			floorGridHelper: () => {
-				const size = this.floor.size.x;
-				const divisions = this.floor.size.x / .5;
-
-				const gridHelper = new THREE.GridHelper(size, divisions);
-				// gridHelper.name = 'floorgridHelper';
-				gridHelper.rotateX(Math.PI / 2)
-				gridHelper.position.set(0, 0, .4)
-				this.scene.add(gridHelper);
 			},
 			renderer: () => {
 				this.renderer = new THREE.WebGLRenderer({ antialias: true });

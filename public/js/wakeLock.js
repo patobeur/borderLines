@@ -2,7 +2,7 @@ import { _console } from "./console.js";
 export const _wakeLock = {
     tryKeepScreenAlive: (minutes) => {
         if ('navigator', navigator.wakeLock) {
-            console.log(navigator.wakeLock)
+            _console.log(navigator.wakeLock)
             navigator.wakeLock.request("screen").then(lock => {
                 setTimeout(() => lock.release(), minutes * 60 * 1000);
             });

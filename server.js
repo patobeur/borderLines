@@ -87,15 +87,15 @@ io.on('connection', (socket) => {
 	// socket.on('checkName', ({ name, room }) => {
 
 	// })
-	socket.on('enterRoom', ({ name, couleur, room }) => {
+	socket.on('enterRoom', ({ name, couleur, room, datas }) => {
 
 		socketing.prevRoom = UsersState.getUser(socket.id)?.room
 
 		// leave previous room if prevRoom
 		if (socketing.prevRoom) socketing.leaveRoom({id:socket.id,name:socket.name})
 
-		socketing.user = UsersState.activateUserInNewRoom(socket.id, name, couleur, room)
-		socketing.users = UsersState.getUsersInRoom(socketing.user.room)
+		socketing.user = UsersState.activateUserInNewRoom(socket.id, name, couleur, room, datas)
+		socketing.users = UsersState.getUsersInRoom(socketing.user.room, datas)
 		// join room 
 		socket.join(socketing.user.room)
 

@@ -1,9 +1,10 @@
 import * as THREE from "three";
 import { _scene } from "./scenes.js";
+import { _model } from "./models.js";
 import { Controls } from "./Controls.js";
 export let _players = {
 	models: {
-		un: { name: 'un', size: { x: .5, y: .5, z: .5 } },
+		un: { name: 'un', size: { x: .5, y: .5, z: 1 } },
 		deux: { name: 'deux', size: { x: 1, y: 1, z: 1 } },
 		trois: { name: 'trois', size: { x: 1, y: 1, z: 1 } },
 	},
@@ -48,9 +49,9 @@ export let _players = {
 
 			let posf = new THREE.Vector3(0, 0, 0)
 			posf.copy(pm.futurPosition)
-			mesh.position.x = posf.x
-			mesh.position.y = posf.y
-			mesh.position.z = posf.z
+			pm.position.x = posf.x
+			pm.position.y = posf.y
+			pm.position.z = posf.z + (pm.size.z/2)
 
 
 
@@ -78,20 +79,27 @@ export let _players = {
 		_scene.scene.add(this.players[user.id].mesh);
 	},
 	getACube: function (user) {
-
+		console.log(user)
 		user.model = this.models['un']
+		let mode = _model.getShape2(user.datas.conf.modelName)
 		// let color = '0x' + user.couleur.substring(1)
-		let color = user.couleur
+		let color = user.datas.couleur
 		let size = new THREE.Vector3(user.model.size.x, user.model.size.y, user.model.size.z)
 
-		const cubeGeometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-		const cubeMaterial = new THREE.MeshPhongMaterial({ color: color });
+		// const cubeGeometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+		// const cubeMaterial = new THREE.MeshPhongMaterial({ color: color });
+		// const mesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
 
-		const mesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
+		//CapsuleGeometry(radius : Float, length : Float, capSegments : Integer, radialSegments : Integer) 
+		const capsgeometry = new THREE.CapsuleGeometry( .5, .5, 8, 16 ); 
+		const capsmaterial = new THREE.MeshBasicMaterial( {color: color} ); 
+		const mesh = new THREE.Mesh( capsgeometry, capsmaterial ); 
+
 		mesh.name = 'CUBE_' + user.name;
 		mesh.size = size
-		// mesh.position.z = mesh.size.z / 2
-		// mesh.velocity = new THREE.Vector3(1, 0, 0)
+		mesh.position.z = mesh.size.z / 2
+		//mesh.velocity = new THREE.Vector3(1, 0, 0)
+		mesh.rotation.x = (Math.PI/2) 
 		mesh.speedRatio = .1
 		mesh.hover = false
 
@@ -101,7 +109,7 @@ export let _players = {
 			posf.copy(pos)
 			mesh.position.x = posf.x
 			mesh.position.y = posf.y
-			mesh.position.z = posf.z
+			mesh.position.z = posf.z + (mesh.size.z/2)
 		}
 
 		mesh.castShadow = true;
