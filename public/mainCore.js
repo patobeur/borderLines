@@ -78,7 +78,7 @@ export let Core = {
 				name: this.nameInput.value,
 				couleur: this.colorInput.value,
 				room: room,
-				datas:{modelName: _model.model.datas.modelName}
+				datas:{modelName: _model.MYMODEL.datas.modelName}
 			})
 		}
 		this.msgInput.focus()

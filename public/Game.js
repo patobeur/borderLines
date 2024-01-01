@@ -104,7 +104,7 @@ export class Game {
 		_soleil.rotation()
 
 		if (_model.on) {
-			_model.model.mesh.update()
+			_model.MYMODEL.mesh.update()
 		}
 		if (_players.player) {
 			_cameras.lookAtCenter(_players.player.mesh.position)
