@@ -5,6 +5,7 @@ import { _names } from "./js/names.js";
 import { _colors } from "./js/colors.js";
 import { _players } from "./js/players.js";
 import { _model } from "./js/models.js";
+import { _texturesLoader } from "./js/texturesLoader.js";
 export let Core = {
 	GAME: new Game(),
 	socket: false,
@@ -66,7 +67,15 @@ export let Core = {
 				}
 			}
 		});
-		_model.init()
+		_texturesLoader.init((callbackDatas)=>{
+			console.log(callbackDatas)
+			this.init2()
+		})
+	},
+	//---------------------
+	//---------------------
+	init2: function () {
+		_model.init();
 		this.socketRun();
 	},
 	//---------------------

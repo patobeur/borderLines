@@ -15,6 +15,9 @@ export let _model = {
 	},
 	init: function (callBackFunction) {
 
+
+
+
 		this.callBackFunction = callBackFunction
 		this.addModel()
 		this.frontclass= document.getElementById('frontclass')
@@ -58,29 +61,32 @@ export let _model = {
 		_scene.scene.add(this.MYMODEL.mesh);
 	},
 	getShapesDatas: function () {
-		const size = this.MYMODEL.size
-		const volume = size.x * size.y * size.z;
+		let mms = this.MYMODEL.size
+		const volume = mms.x * mms.y * mms.z;
 		const radius = Math.cbrt(volume / (4 * Math.PI / 3)); // Calcul du rayon de la sphère équivalente
 		let datas = {
 			cube: {
 				modelName:'front',
-				size: { x: size.x, y: size.y, z: size.z },
-				radius: radius,
-				geometry: new THREE.BoxGeometry(size.x, size.y, size.z),
+				size: { x: mms.x+0, y: mms.y+0, z: mms.z+0 },
+				volume: volume+0,
+				radius: radius+0,
+				geometry: new THREE.BoxGeometry(mms.x, mms.y, mms.z),
 				material: new THREE.MeshPhongMaterial({ color: this.color })
 			},
 			capsule: {
 				modelName:'support',
-				size: { x: size.x, y: size.y, z: size.z },
-				radius: radius,
+				size: { x: radius, y: radius, z: radius*1.5},
+				volume: volume+0,
+				radius: (radius/2)+0,
 				// CapsuleGeometry(radius : Float, length : Float, capSegments : Integer, radialSegments : Integer) 
-				geometry: new THREE.CapsuleGeometry(radius, size.y, 8, 16),
+				geometry: new THREE.CapsuleGeometry(radius/2, radius*2, 8, 16),
 				material: new THREE.MeshPhongMaterial({ color: this.color })
 			},
 			sphere: {
 				modelName:'back',
 				size: { x: radius * 2, y: radius * 2, z: radius * 2 },
-				radius: radius,
+				volume: volume+0,
+				radius: radius+0,
 				// SphereGeometry(radius : Float, widthSegments : Integer, heightSegments : Integer, phiStart : Float, phiLength : Float, thetaStart : Float, thetaLength : Float) 
 				geometry: new THREE.SphereGeometry(radius, 32, 16),
 				material: new THREE.MeshPhongMaterial({ color: this.color })
@@ -98,7 +104,6 @@ export let _model = {
 
 		this.MYMODEL.size=this.MYMODEL.datas.size
 		
-		console.log('this.MYMODEL:', this.MYMODEL)
 
 		this.MYMODEL.mesh = new THREE.Mesh(
 			this.MYMODEL.datas.geometry,
@@ -120,6 +125,7 @@ export let _model = {
 		this.MYMODEL.mesh.castShadow = true;
 		this.MYMODEL.mesh.receiveShadow = true;
 		
+		console.log('model.js setShape this.MYMODEL:', this.MYMODEL)
 	},
 	getFinallShape: function (modelName,user) {
 		this.color = user.couleur

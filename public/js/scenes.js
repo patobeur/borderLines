@@ -33,7 +33,9 @@ export let _scene = {
 				this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 				this.renderer.setSize(window.innerWidth, window.innerHeight);
 				this.renderer.setPixelRatio(devicePixelRatio);
-				this.renderer.setClearColor(0xaaaaaa);
+				// Set background color.
+				// this.renderer.setClearColor(0xaaaaaa);
+				this.renderer.setClearColor(new THREE.Color(0, 0, 0), 1.0);
 				console.log('renderer ok')
 				document.body.appendChild(this.renderer.domElement);
 			},
