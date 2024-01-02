@@ -59,14 +59,14 @@ export let Core = {
 		this.GAME.init({
 			callBackFunction: {
 				sendPlayerDatas: (player) => {
-					console.log('sendPlayerDatas:player', player)
+					// console.log('sendPlayerDatas:player', player)
 					let newPaquet = {
 						name: player.user.name,
 						id: player.user.id,
 						pos: player.user.datas.pos,
 						other:{x:1}
 					}
-					console.log('send to server', newPaquet)
+					// console.log('send to server', newPaquet)
 					this.socket.emit('newuserposition', newPaquet)
 				}
 			}
