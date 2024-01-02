@@ -25,14 +25,13 @@ export let _players = {
 			mesh: mesh,
 			group: group
 		}
+
 		let pm = this.player.mesh
 		let futur = new THREE.Vector3(0, 0, (this.player.user.size.z / 2)) //futur position
 		let actual = pm.position
 		let speedRatio = pm.speedRatio * .5
-		// futur = new THREE.Vector3(0, 0, (this.player.user.size.z / 2))
 
 		this.player.mesh.checkControls = (Controls) => {
-			let move = false
 			// _movePlayer.move(this.player,Controls,this.callBackFunction)
 			if (Controls.left) futur.x = actual.x - speedRatio;
 			if (Controls.right) futur.x = actual.x + speedRatio;
@@ -40,8 +39,9 @@ export let _players = {
 			if (Controls.down) futur.y = actual.y - speedRatio;
 
 			if (Controls.left || Controls.right || Controls.up || Controls.down) {
+				let move = false
 				if (futur != actual) {
-					console.log('----', this.player.user)
+					
 
 					let minx = -(_scene.floor.size.x / 2) + (this.player.user.size.x / 2)
 					let maxx = (_scene.floor.size.x / 2) - (this.player.user.size.x / 2)
@@ -70,7 +70,7 @@ export let _players = {
 						// console.log('send callback ', this.player)
 					}
 					if (move) {
-						console.log('i move to ', futur)
+						console.log('move and sending pos', futur)
 						this.callBackFunction.sendPlayerDatas(this.player)
 					}
 				}
@@ -79,7 +79,7 @@ export let _players = {
 		_scene.scene.add(this.player.mesh);
 	},
 	addTeamMate: function (user) {
-		console.log('user', user)
+		console.log('addTeamMate',user.name, user)
 		let mesh = this.getACube(user)
 		mesh.checkmove = (datas) => {
 
