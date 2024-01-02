@@ -29,7 +29,9 @@ export class Game {
 
 	addTeamPlayer = function (user) {
 		console.log('addTeamPlayer ', user.name)
-		this.users[user.id] = user
+
+		this.users[user.id] = user // ???????????? in use
+
 		_players.addTeamMate(user)
 	}
 	removeTeamPlayer = function (user) {

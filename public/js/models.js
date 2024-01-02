@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { _scene } from "./scenes.js";
+import { _texturesLoader } from "./texturesLoader.js";
 export let _model = {
 	rotation:0,
 	on: false,
@@ -10,13 +11,9 @@ export let _model = {
 		support: {shapetype: 'capsule'},
 	},
 	MYMODEL: {
-		datas: null,
-		size: { x:1, y:1, z: 1 },
+		datas: null
 	},
 	init: function (callBackFunction) {
-
-
-
 
 		this.callBackFunction = callBackFunction
 		this.addModel()
@@ -61,7 +58,7 @@ export let _model = {
 		_scene.scene.add(this.MYMODEL.mesh);
 	},
 	getShapesDatas: function () {
-		let mms = this.MYMODEL.size
+		let mms = { x:1, y:1, z: 1 }
 		const volume = mms.x * mms.y * mms.z;
 		const radius = Math.cbrt(volume / (4 * Math.PI / 3)); // Calcul du rayon de la sphère équivalente
 		let datas = {
@@ -71,16 +68,22 @@ export let _model = {
 				volume: volume+0,
 				radius: radius+0,
 				geometry: new THREE.BoxGeometry(mms.x, mms.y, mms.z),
-				material: new THREE.MeshPhongMaterial({ color: this.color })
+				material: new THREE.MeshToonMaterial({ 
+					color: this.color,
+					map: _texturesLoader.textures['front'].map,
+				 })
 			},
 			capsule: {
 				modelName:'support',
-				size: { x: radius, y: radius, z: radius*1.5},
+				size: { x: mms.x/1.5, y: mms.y/1.5, z:mms.z*1.5},
 				volume: volume+0,
 				radius: (radius/2)+0,
 				// CapsuleGeometry(radius : Float, length : Float, capSegments : Integer, radialSegments : Integer) 
-				geometry: new THREE.CapsuleGeometry(radius/2, radius*2, 8, 16),
-				material: new THREE.MeshPhongMaterial({ color: this.color })
+				geometry: new THREE.CapsuleGeometry(radius/1.5, radius, 8, 16),
+				material: new THREE.MeshToonMaterial({ 
+					color: this.color,
+					map: _texturesLoader.textures['support'].map,
+				 })
 			},
 			sphere: {
 				modelName:'back',
@@ -89,12 +92,17 @@ export let _model = {
 				radius: radius+0,
 				// SphereGeometry(radius : Float, widthSegments : Integer, heightSegments : Integer, phiStart : Float, phiLength : Float, thetaStart : Float, thetaLength : Float) 
 				geometry: new THREE.SphereGeometry(radius, 32, 16),
-				material: new THREE.MeshPhongMaterial({ color: this.color })
+				// material: new THREE.MeshPhongMaterial({ color: this.color })
+				material: new THREE.MeshToonMaterial({ 
+					color: this.color,
+					map: _texturesLoader.textures['back'].map,
+				 })
+				
 			}
 		}
 		return datas
 	},
-	setShape: function (modelName) {
+	setShape: function (modelName = 'front') {
 		
 		this.MYMODEL.datas = this.getShapesDatas()[this.models[modelName].shapetype]
 
@@ -109,6 +117,9 @@ export let _model = {
 			this.MYMODEL.datas.geometry,
 			this.MYMODEL.datas.material
 		);
+		
+		this.MYMODEL.mesh.material.map = _texturesLoader.textures[this.MYMODEL.datas.modelName].map
+
 
 		this.MYMODEL.mesh.name = 'model_' + this.models[modelName].shapetype;
 		this.MYMODEL.mesh.position.z = 0 + this.MYMODEL.datas.size.z / 2
@@ -127,20 +138,23 @@ export let _model = {
 		
 		console.log('model.js setShape this.MYMODEL:', this.MYMODEL)
 	},
-	getFinallShape: function (modelName,user) {
+	getFinallShape: function (user) {
+		let modelName = user.datas.conf.modelName
 		this.color = user.couleur
+		modelName = user.datas.conf.modelName
 		let shapetype = this.models[modelName].shapetype
 		let datas = this.getShapesDatas()[shapetype]
+
 		datas.modelName = modelName
-
-
+		datas.shapetype = shapetype
 
 		let mesh = new THREE.Mesh(
 			datas.geometry,
 			datas.material
 		);
 		
-		mesh.name = 'model_' + shapetype + '_' + modelName;
+		// mesh.material.map = _texturesLoader.textures[datas.modelName].map
+		mesh.name = 'model_' + shapetype + '_' + datas.modelName;
 		// mesh.hover = false
 		datas.hover = false
 		mesh.castShadow = true;

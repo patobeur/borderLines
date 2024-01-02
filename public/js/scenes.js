@@ -15,6 +15,7 @@ export let _scene = {
 		this._sets = {
 			scene: () => {
 				this.scene = new THREE.Scene();
+				console.log('scene ok')
 			},
 			axesHelper: () => {
 				// const axesHelper = new THREE.AxesHelper(1000);
@@ -26,18 +27,22 @@ export let _scene = {
 				_floors.init()
 				this.floor = _floors.floor
 				this.scene.add(this.floor);
+				console.log('floor ok')
 			},
 			renderer: () => {
-				this.renderer = new THREE.WebGLRenderer({ antialias: true });
+				this.renderer = new THREE.WebGLRenderer({ 
+					antialias: true,
+					alpha: true,
+				 });
 				this.renderer.shadowMap.enabled = true;
 				this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 				this.renderer.setSize(window.innerWidth, window.innerHeight);
-				this.renderer.setPixelRatio(devicePixelRatio);
+				this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 				// Set background color.
 				// this.renderer.setClearColor(0xaaaaaa);
 				this.renderer.setClearColor(new THREE.Color(0, 0, 0), 1.0);
-				console.log('renderer ok')
 				document.body.appendChild(this.renderer.domElement);
+				console.log('renderer ok')
 			},
 			addColonnes: () => {
 				let i = 0;
@@ -61,16 +66,19 @@ export let _scene = {
 				pointLight2.castShadow = true;
 				pointLight2.position.set(2, 2, 3);
 				this.scene.add(pointLight2);
+				console.log('lights ok')
 
 			},
 			sun: () => {
 				_soleil.init(this.floor.size)
+				console.log('sun ok')
 			},
 			cameras: () => {
 				_cameras.init();
 				console.log('cameras ok (matrixed and rendered')
 				_cameras.currentPack.camera.updateProjectionMatrix();
 				this.renderer.render(this.scene, _cameras.currentPack.camera);
+				console.log('camera ok')
 			},
 		};
 		for (const key in this._sets) {

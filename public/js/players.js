@@ -3,11 +3,11 @@ import { _scene } from "./scenes.js";
 import { _model } from "./models.js";
 import { Controls } from "./Controls.js";
 export let _players = {
-	models: {
-		un: { name: 'un', size: { x: .5, y: .5, z: 1 } },
-		deux: { name: 'deux', size: { x: 1, y: 1, z: 1 } },
-		trois: { name: 'trois', size: { x: 1, y: 1, z: 1 } },
-	},
+	// models: {
+	// 	un: { name: 'un'},
+	// 	deux: { name: 'deux' },
+	// 	trois: { name: 'trois' },
+	// },
 	player: false,
 	players: {},
 	counterPlayers: {},
@@ -23,6 +23,7 @@ export let _players = {
 			mesh: mesh
 		}
 		let pm = this.player.mesh
+
 		pm.futurPosition = new THREE.Vector3(0, 0, 0)
 		pm.checkControls = (Controls) => {
 			if (Controls.left) pm.futurPosition.x = pm.position.x - pm.speedRatio;
@@ -52,7 +53,7 @@ export let _players = {
 			posf.copy(pm.futurPosition)
 			pm.position.x = posf.x
 			pm.position.y = posf.y
-			pm.position.z = posf.z + (this.player.user.size.z/2)
+			pm.position.z = 0 + (this.player.user.size.z/2)
 
 						this.player.user.datas.pos = pm.futurPosition
 						// send to server
@@ -78,8 +79,8 @@ export let _players = {
 		_scene.scene.add(this.players[user.id].mesh);
 	},
 	getACube: function (user) {
-		console.log('getACube',user)
-		let model = _model.getFinallShape(user.datas.conf.modelName,user)
+		// console.log('getACube',user)
+		let model = _model.getFinallShape(user)
 
  		const mesh = model.mesh
 
@@ -87,8 +88,10 @@ export let _players = {
 
 		user.size = model.size
 		
-		mesh.position.z = model.size.z / 2
-
+		// mesh.position.z = model.size.z / 2
+		mesh.position.z = user.datas.pos.z + (user.size.z/2)
+		mesh.position.x = user.datas.pos.x
+		mesh.position.y = user.datas.pos.y
 		//mesh.velocity = new THREE.Vector3(1, 0, 0)
 
 		mesh.rotation.x = (Math.PI/2) 
@@ -101,7 +104,7 @@ export let _players = {
 			posf.copy(pos)
 			mesh.position.x = posf.x
 			mesh.position.y = posf.y
-			mesh.position.z = posf.z + (user.size.z/2)
+			mesh.position.z = 0 + (user.size.z/2)
 		}
 
 		mesh.castShadow = true;

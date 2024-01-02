@@ -47,11 +47,16 @@ export let Core = {
 		this.sendForm = _console.formsender;
 
 		this.socket = datas.socket;
+
+		_texturesLoader.init((callbackDatas)=>{
+			console.log(callbackDatas)
+			this.init2()
+		})
+	},
+	//---------------------
+	//---------------------
+	init2: function () {
 		this.GAME.init({
-			// user: this.user,
-			// users: this.users,
-			// rooms: this.rooms,
-			// socket: this.socket,
 			callBackFunction: {
 				sendPlayerDatas: (player) => {
 					console.log('sendPlayerDatas:player', player)
@@ -63,23 +68,14 @@ export let Core = {
 					}
 					console.log('send to server', newPaquet)
 					this.socket.emit('newuserposition', newPaquet)
-					// console.log('this.socket.emit(',newPaquet)
 				}
 			}
 		});
-		_texturesLoader.init((callbackDatas)=>{
-			console.log(callbackDatas)
-			this.init2()
-		})
-	},
-	//---------------------
-	//---------------------
-	init2: function () {
 		_model.init();
 		this.socketRun();
 	},
 	//---------------------
-	//---------------------
+	//-----SEND------------
 	sendEnterRoom: function (room) {
 
 		if (this.nameInput.value != '') {
@@ -106,10 +102,91 @@ export let Core = {
 		}
 	},
 	//---------------------
-	//---------------------
+	//-----RECEVE----------
 	messageRecuConsole: function (message) {
 		_console.log(`messageRecuConsole ${message}`)
 	},
+	removeThreeUser: function (users = false) {
+		console.log('removeThreeUser')
+		for (const key in users) {
+			if (Object.hasOwnProperty.call(users, key)) {
+				const element = users[key];
+				console.log(element)
+
+			}
+		}
+	},
+	refreshUsersListInRoom: function (users = false) {
+		if (users) {
+			this.usersList.textContent = ''
+			this.users = users
+			this.users.forEach((user, i) => {
+				let name = user.name
+				let classPlus = ''
+				if (name === this.user.name) {
+					classPlus = ' moi'
+				}
+				let userDiv = _front.createDiv({ tag: 'span', attributes: { className: 'player-span' + classPlus, textContent: name } })
+				this.usersList.appendChild(userDiv)
+			})
+		}
+	},
+	removePlayerFromRoom: function (name) {
+		console.log('---------------------------------------')
+		console.log('remove player :', name)
+	},
+	refreshRoomsList: function (rooms) {
+		this.rooms = rooms
+		this.roomList.textContent = ''
+		if (this.rooms) {
+			this.rooms.forEach((room, i) => {
+				let classPlus = ''
+				if (room === this.user.room) {
+					classPlus = ' moi'
+				}
+				let roomDiv = _front.createDiv({ tag: 'span', attributes: { className: 'room-span' + classPlus, textContent: room } })
+				this.roomList.appendChild(roomDiv)
+			})
+			let icoDiv = _front.createDiv({ tag: 'span', attributes: { className: 'ico-span', textContent: 'R' } })
+			this.roomList.appendChild(icoDiv)
+		}
+	},
+	addNewUsers: function (users) {
+		for (const key in users) {
+			const user = users[key];
+			if (user.id != this.user.id) {
+				console.log('-----####addNewUsers: -',this.user.name)
+				// if (typeof this.GAME.users[user.id] === 'undefined') {
+				if (typeof _players.players[user.id] === 'undefined') {
+					this.GAME.addTeamPlayer(user)
+				}
+			}
+		}
+	},
+	removeMissingUsers: function (users) {
+		const usersById = {}
+		users.forEach(element => {
+			usersById[element.id] = element
+		});
+
+		// let currentUsersInGame = _players.players
+		let currentUsersInGame = this.GAME.users
+
+
+		for (const key in currentUsersInGame) {
+			const user = currentUsersInGame[key];
+			if (this.user.id != user.id) {
+				if (typeof usersById[user.id] === 'undefined') {
+					console.log(user)
+					this.GAME.removeTeamPlayer(user)
+				}
+			}
+			else {
+			}
+		}
+	},
+	//---------------------
+	//---------------------
 	addListener: function () {
 		if (this.nameInput.value === '') this.nameInput.value = _names.getAName()
 
@@ -163,77 +240,6 @@ export let Core = {
 			}
 			else this.getAName()
 		})
-	},
-	removeThreeUser: function (users = false) {
-		console.log('removeThreeUser')
-		for (const key in users) {
-			if (Object.hasOwnProperty.call(users, key)) {
-				const element = users[key];
-				console.log(element)
-
-			}
-		}
-	},
-	refreshUsersListInRoom: function (users = false) {
-		if (users) {
-			this.usersList.textContent = ''
-			this.users = users
-			this.users.forEach((user, i) => {
-				let name = user.name
-				let classPlus = ''
-				if (name === this.user.name) {
-					classPlus = ' moi'
-				}
-				let userDiv = _front.createDiv({ tag: 'span', attributes: { className: 'player-span' + classPlus, textContent: name } })
-				this.usersList.appendChild(userDiv)
-			})
-		}
-	},
-	removePlayerFromRoom: function (name) {
-		console.log('---------------------------------------')
-		console.log('remove player :', name)
-	},
-	refreshRoomsList: function (rooms) {
-		this.rooms = rooms
-		this.roomList.textContent = ''
-		if (this.rooms) {
-			this.rooms.forEach((room, i) => {
-				let classPlus = ''
-				if (room === this.user.room) {
-					classPlus = ' moi'
-				}
-				let roomDiv = _front.createDiv({ tag: 'span', attributes: { className: 'room-span' + classPlus, textContent: room } })
-				this.roomList.appendChild(roomDiv)
-			})
-			let icoDiv = _front.createDiv({ tag: 'span', attributes: { className: 'ico-span', textContent: 'R' } })
-			this.roomList.appendChild(icoDiv)
-		}
-	},
-	addNewUsers: function (users) {
-		for (const key in users) {
-			const user = users[key];
-			if (user.id != this.user.id) {
-				console.log('-----####addNewUsers: -',this.user.name)
-				if (typeof this.GAME.users[user.id] === 'undefined') {
-					this.GAME.addTeamPlayer(user)
-				}
-			}
-		}
-	},
-	removeMissingUsers: function (users) {
-		const usersById = {}
-		users.forEach(element => {
-			usersById[element.id] = element
-		});
-		let currentUsersInGame = this.GAME.users
-		for (const key in currentUsersInGame) {
-			const user = currentUsersInGame[key];
-			if (this.user.id != user.id) {
-				if (typeof usersById[user.id] === 'undefined') {
-					this.GAME.removeTeamPlayer(user)
-				}
-			}
-		}
 	},
 	socketRun: function () {
 		this.addListener()
