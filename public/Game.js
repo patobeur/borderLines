@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { _console } from "./js/console.js";
 import { _soleil } from "./js/soleil.js";
 import { _model } from "./js/models.js";
@@ -13,7 +14,7 @@ import { _cameras } from "./js/cameras.js";
 import { _stats } from "./js/stats.js";
 import { _scene } from "./js/scenes.js";
 import { _players } from "./js/players.js";
-import { VRButton } from 'three/addons/webxr/VRButton.js';
+// import { VRButton } from 'three/addons/webxr/VRButton.js';
 
 export class Game {
 	_datas = null;
@@ -70,11 +71,12 @@ export class Game {
 		// console.log(VRButton)
 
 		this.addEventsListeners();
+		
 		this._START();
 		console.log('game _START')
 	};
 	addVRButton = () => {
-		document.body.appendChild(VRButton.createButton(_scene.renderer));
+		// document.body.appendChild(VRButton.createButton(_scene.renderer));
 	};
 	addEventsListeners = () => {
 		window.addEventListener("resize", () => {
@@ -87,6 +89,8 @@ export class Game {
 	};
 	_START() {
 		console.log("STARTED");
+		// this.ORBITOR = new OrbitControls(_cameras.currentPack.camera, _scene.renderer.domElement);
+
 		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);
 		this._REFRESH();
 	}
@@ -120,6 +124,8 @@ export class Game {
 		}
 		_cameras.currentPack.camera.updateProjectionMatrix();
 		
+		// if(this.ORBITOR) this.ORBITOR.update(); // Mettre à jour OrbitControls
+
 		// this.Controls._get_intersectionColorChange()
 
 		// PLAYER CUBE UPDATE
