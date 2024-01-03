@@ -7,9 +7,11 @@ export const _texturesLoader = {
 	length: null,
 	textureLoader: new THREE.TextureLoader(),
 	files: [
-		{ name: 'front', shapeType: 'cube',  path: './textures/', fileName: 'front.png' },
+		{ name: 'front', shapeType: 'cube',  path: './textures/', fileName: 'front.png'},
 		{ name: 'back', shapeType: 'sphere', path: './textures/', fileName: 'back.png' },
 		{ name: 'support', shapeType: 'capsule', path: './textures/', fileName: 'support.png' },
+		{ name: 'side', path: './textures/', fileName: 'side.png' },
+		{ name: 'top', path: './textures/', fileName: 'top.png' },
 	],
 	init: function (callbackFunction) {
 		this.callbackFunction = callbackFunction
