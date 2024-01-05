@@ -11,7 +11,7 @@ export let _players = {
 	ghostmesh:false,
 	player: false,
 	players: {},
-	counterPlayers: {},
+	counterPlayers:0,
 	init: function (user, callBackFunction) {
 		this.callBackFunction = callBackFunction
 		this.addPlayer(user)
@@ -36,7 +36,7 @@ export let _players = {
 		let pm = this.player.mesh
 		let futur = new THREE.Vector3(0, 0, (this.player.user.size.z / 2)) //futur position
 		let actual = this.player.mesh.position
-		let speedRatio = this.player.mesh.speedRatio * .5
+		let speedRatio = this.player.mesh.speedRatio * 1
 
 		this.player.mesh.checkControls = (Controls) => {
 			// _movePlayer.move(this.player,Controls,this.callBackFunction)
@@ -88,21 +88,28 @@ export let _players = {
 							this.player.user.datas.pos.z = this.ghostmesh.position.z - (this.player.user.size.z / 2)
 
 
-							console.log(this.player.user.datas.pos)
-							console.log(this.player.mesh.position)
 
 							this.callBackFunction.sendPlayerDatas(this.player)
 						}
 					}
 					else {
-						// this.ghostmesh = this.player.mesh.clone()
+						console.log(this.player.mesh.position)
+						console.log(this.ghostmesh.position)
 						this.ghostmesh.position.copy(this.player.mesh.position)
-						// this.player.mesh.position.copy(this.ghostmesh.position)
 					}
 				}
 			}
 		}
 		_scene.scene.add(this.player.mesh);
+	},
+	removeTeamMate: function (user) {
+		this.players[user.id].mesh.geometry.dispose();
+        this.players[user.id].mesh.material.dispose();
+
+        _scene.scene.remove(this.players[user.id].mesh);
+
+		delete this.players[user.id]
+		this.counterPlayers--
 	},
 	addTeamMate: function (user) {
 		console.log('addTeamMate', user.name, user)
@@ -172,7 +179,7 @@ export let _players = {
 			const player = this.players[userId];
 			let otherMeshBoundingBox = new THREE.Box3().setFromObject(player.mesh);
 			if (myMeshBoundingBox.intersectsBox(otherMeshBoundingBox)) {
-				console.log("Collision détectée avec l'objet " + player.user.name);
+				console.log("Collision détectée avec user " + player.user.name);
 				return true
 			}
 		}

@@ -131,10 +131,10 @@ export let Core = {
 			})
 		}
 	},
-	removePlayerFromRoom: function (name) {
-		console.log('---------------------------------------')
-		console.log('remove player :', name)
-	},
+	// removePlayerFromRoom: function (name) {
+	// 	console.log('---------------------------------------')
+	// 	console.log('remove player :', name)
+	// },
 	refreshRoomsList: function (rooms) {
 		this.rooms = rooms
 		this.roomList.textContent = ''
@@ -276,9 +276,9 @@ export let Core = {
 			this.refreshRoomsList(rooms)
 		})
 
-		this.socket.on('removePlayerFromRoom', ({ name }) => {
-			this.removePlayerFromRoom(name)
-		})
+		// this.socket.on('removePlayerFromRoom', ({ name }) => {
+		// 	this.removePlayerFromRoom(name)
+		// })
 
 		this.socket.on('refreshUsersListInRoom', ({ users, message }) => {
 			this.refreshUsersListInRoom(users)
