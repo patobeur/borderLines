@@ -38,14 +38,8 @@ export class Game {
 		_players.addTeamMate(user)
 	}
 	removeTeamPlayer = function (user) {
-		
-		_players.players[user.id].mesh.geometry.dispose();
-        _players.players[user.id].mesh.material.dispose();
-
-        _scene.scene.remove(_players.players[user.id].mesh);
-
+		_players.removeTeamMate(user)
 		delete this.users[user.id]
-		delete _players.players[user.id]
 	}
 
 	initPlayer = function (user) {
