@@ -162,6 +162,7 @@ export let _model = {
 			mesh.material.bumpMap = datas.material2
 			mesh.material.bumpScale = 0.025
 		}
+		mesh.material.transparent = true;
 
 		// mesh.material.map = _texturesLoader.textures[datas.modelName].map
 		mesh.name = 'model_' + shapetype + '_' + datas.modelName;
