@@ -86,7 +86,7 @@ export let Core = {
 				datas:{modelName: _model.MYMODEL.datas.modelName}
 			})
 		}
-		this.msgInput.focus()
+		// this.msgInput.focus()
 	},
 	sendPlayerMessageToRoom: function () {
 		if (this.user.name && this.msgInput.value != '' && this.user.room != false) {

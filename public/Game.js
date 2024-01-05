@@ -15,7 +15,8 @@ import { _stats } from "./js/stats.js";
 import { _scene } from "./js/scenes.js";
 import { _players } from "./js/players.js";
 
-import { VRButton } from 'three/addons/webxr/VRButton.js';
+import { _renderer } from "./js/renderer.js";
+import { _vr } from "./js/vr.js";
 
 export class Game {
 	_datas = null;
@@ -68,31 +69,30 @@ export class Game {
 		// this.LoadingManager.setScene(this._scene)
 		// this.LoadingManager.loadThemAll()
 
-		this.addVRButton();
-		// console.log(VRButton)
 
 		this.addEventsListeners();
 		
+		_vr.addVRButton();
 		this._START();
 		console.log('game _START')
 	};
-	addVRButton = () => {
-		document.body.appendChild(VRButton.createButton(_scene.renderer));
-	};
+	// addVRButton = () => {
+	// 	document.body.appendChild(VRButton.createButton(_renderer.renderer));
+	// };
 	addEventsListeners = () => {
 		window.addEventListener("resize", () => {
 			const newWidth = window.innerWidth;
 			const newHeight = window.innerHeight;
 			_cameras.currentPack.camera.aspect = newWidth / newHeight;
 			_cameras.currentPack.camera.updateProjectionMatrix();
-			_scene.renderer.setSize(newWidth, newHeight);
+			_renderer.renderer.setSize(newWidth, newHeight);
 		});
 	};
 	_START() {
 		console.log("STARTED");
 		// this.ORBITOR = new OrbitControls(_cameras.currentPack.camera, _scene.renderer.domElement);
+		// _renderer.renderer.render(_scene.scene, _cameras.currentPack.camera);
 
-		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);
 		this._REFRESH();
 	}
 	_REFRESH = () => {
@@ -132,6 +132,10 @@ export class Game {
 		// PLAYER CUBE UPDATE
 		if (_players.player) _players.player.mesh.checkControls(this.Controls);
 
-		_scene.renderer.render(_scene.scene, _cameras.currentPack.camera);
+
+		// vr
+		_renderer.renderer.xr.updateCamera( _cameras.currentPack.camera );
+
+		_renderer.renderer.render(_scene.scene, _cameras.currentPack.camera);
 	};
 }

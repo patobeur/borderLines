@@ -4,11 +4,12 @@ import { _console } from "./console.js";
 import { _soleil } from "./soleil.js";
 import { _floors } from "./floors.js";
 import { _model } from "./models.js";
+import { _renderer } from "./renderer.js";
+import { _vr } from "./vr.js";
 export let _scene = {
 	scene: null,
-	renderer: null,
 	_sets: null,
-    controller: null,
+	controller: null,
 	//---------------
 	cube: null,
 	floor: null,
@@ -31,22 +32,23 @@ export let _scene = {
 				console.log('floor ok')
 			},
 			renderer: () => {
-				this.renderer = new THREE.WebGLRenderer({ 
-					antialias: true,
-					alpha: true,
-				 });
-				this.renderer.shadowMap.enabled = true;
-				this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
-				this.renderer.setSize(window.innerWidth, window.innerHeight);
-				this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-				// Set background color.
-				// this.renderer.setClearColor(0xaaaaaa);
-				this.renderer.setClearColor(new THREE.Color(0, 0, 0), 1.0);
-				
-        // Turn on VR support
-        this.renderer.xr.enabled = true;
-				document.body.appendChild(this.renderer.domElement);
-				console.log('renderer ok')
+				_renderer.init()
+				// this.renderer = new THREE.WebGLRenderer({
+				// 	antialias: true,
+				// 	alpha: true,
+				// });
+				// this.renderer.shadowMap.enabled = true;
+				// this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+				// this.renderer.setSize(window.innerWidth, window.innerHeight);
+				// this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+				// // Set background color.
+				// // this.renderer.setClearColor(0xaaaaaa);
+				// this.renderer.setClearColor(0x000010, 1.0);
+
+				// // Turn on VR support
+				// this.renderer.xr.enabled = true;
+				// document.body.appendChild(this.renderer.domElement);
+				// console.log('renderer ok')
 			},
 			addColonnes: () => {
 				let i = 0;
@@ -65,7 +67,7 @@ export let _scene = {
 				pointLight.castShadow = true;
 				pointLight.position.set(0, 100, 100);
 				this.scene.add(pointLight);
-				
+
 				const pointLight2 = new THREE.PointLight(0xffffff, 1);
 				pointLight2.castShadow = true;
 				pointLight2.position.set(2, 2, 3);
@@ -81,13 +83,15 @@ export let _scene = {
 				_cameras.init();
 				console.log('cameras ok (matrixed and rendered')
 				_cameras.currentPack.camera.updateProjectionMatrix();
-				this.renderer.render(this.scene, _cameras.currentPack.camera);
+				_renderer.renderer.render(this.scene, _cameras.currentPack.camera);
 				console.log('camera ok')
 			},
-			controllers: ()=>{
-                this.controller = this.renderer.xr.getController(0);
-                // this.controller.addEventListener('select', onSelect);
-				this.scene.add(this.controller);
+			vr: () => {
+				_vr.init()
+				_vr.renderCamera( );
+				// this.controller = _renderer.renderer.xr.getController(0);
+				// // this.controller.addEventListener('select', onSelect);
+				// this.scene.add(this.controller);
 			}
 		};
 		for (const key in this._sets) {
