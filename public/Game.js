@@ -14,6 +14,7 @@ import { _cameras } from "./js/cameras.js";
 import { _stats } from "./js/stats.js";
 import { _scene } from "./js/scenes.js";
 import { _players } from "./js/players.js";
+
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 
 export class Game {
@@ -68,7 +69,7 @@ export class Game {
 		// this.LoadingManager.loadThemAll()
 
 		this.addVRButton();
-		console.log(VRButton)
+		// console.log(VRButton)
 
 		this.addEventsListeners();
 		

@@ -8,6 +8,7 @@ export let _scene = {
 	scene: null,
 	renderer: null,
 	_sets: null,
+    controller: null,
 	//---------------
 	cube: null,
 	floor: null,
@@ -41,6 +42,9 @@ export let _scene = {
 				// Set background color.
 				// this.renderer.setClearColor(0xaaaaaa);
 				this.renderer.setClearColor(new THREE.Color(0, 0, 0), 1.0);
+				
+        // Turn on VR support
+        this.renderer.xr.enabled = true;
 				document.body.appendChild(this.renderer.domElement);
 				console.log('renderer ok')
 			},
@@ -80,6 +84,11 @@ export let _scene = {
 				this.renderer.render(this.scene, _cameras.currentPack.camera);
 				console.log('camera ok')
 			},
+			controllers: ()=>{
+                this.controller = this.renderer.xr.getController(0);
+                // this.controller.addEventListener('select', onSelect);
+				this.scene.add(this.controller);
+			}
 		};
 		for (const key in this._sets) {
 			if (Object.hasOwnProperty.call(this._sets, key)) {
