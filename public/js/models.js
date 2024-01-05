@@ -71,14 +71,10 @@ export let _model = {
 				volume: volume + 0,
 				radius: radius + 0,
 				geometry: new THREE.BoxGeometry(mms.x, mms.y, mms.z),
-				material: new THREE.MeshToonMaterial({
+				material: new THREE.MeshPhongMaterial({
 					color: this.color,
-					map: _texturesLoader.textures['side'].map
+					map: _texturesLoader.textures['front'].map
 				}),
-				material2: new THREE.MeshToonMaterial({
-					color: this.color,
-					map: _texturesLoader.textures['top'].map
-				})
 			},
 			capsule: {
 				modelName: 'support',
@@ -87,7 +83,7 @@ export let _model = {
 				radius: (radius / 2) + 0,
 				// CapsuleGeometry(radius : Float, length : Float, capSegments : Integer, radialSegments : Integer) 
 				geometry: new THREE.CapsuleGeometry(radius / 1.5, radius, 8, 16),
-				material: new THREE.MeshToonMaterial({
+				material: new THREE.MeshPhongMaterial({
 					color: this.color,
 					map: _texturesLoader.textures['support'].map,
 				})
@@ -100,7 +96,7 @@ export let _model = {
 				// SphereGeometry(radius : Float, widthSegments : Integer, heightSegments : Integer, phiStart : Float, phiLength : Float, thetaStart : Float, thetaLength : Float) 
 				geometry: new THREE.SphereGeometry(radius, 32, 16),
 				// material: new THREE.MeshPhongMaterial({ color: this.color })
-				material: new THREE.MeshToonMaterial({
+				material: new THREE.MeshPhongMaterial({
 					color: this.color,
 					map: _texturesLoader.textures['back'].map,
 				})
@@ -118,11 +114,6 @@ export let _model = {
 
 
 		this.MYMODEL.size = this.MYMODEL.datas.size
-
-
-		let mat = this.MYMODEL.datas.material2
-			? [this.MYMODEL.datas.material, this.MYMODEL.datas.material, this.MYMODEL.datas.material2, this.MYMODEL.datas.material, this.MYMODEL.datas.material, this.MYMODEL.datas.material]
-			: this.MYMODEL.datas.material;
 
 		this.MYMODEL.mesh = new THREE.Mesh(
 			this.MYMODEL.datas.geometry,
@@ -161,10 +152,16 @@ export let _model = {
 		let mat = datas.material2
 			? [datas.material, datas.material, datas.material2, datas.material, datas.material, datas.material]
 			: datas.material;
+
 		let mesh = new THREE.Mesh(
 			datas.geometry,
 			mat
 		);
+
+		if (datas.material2) {
+			mesh.material.bumpMap = datas.material2
+			mesh.material.bumpScale = 0.025
+		}
 
 		// mesh.material.map = _texturesLoader.textures[datas.modelName].map
 		mesh.name = 'model_' + shapetype + '_' + datas.modelName;

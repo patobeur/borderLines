@@ -14,7 +14,7 @@ import { _cameras } from "./js/cameras.js";
 import { _stats } from "./js/stats.js";
 import { _scene } from "./js/scenes.js";
 import { _players } from "./js/players.js";
-// import { VRButton } from 'three/addons/webxr/VRButton.js';
+import { VRButton } from 'three/addons/webxr/VRButton.js';
 
 export class Game {
 	_datas = null;
@@ -67,8 +67,8 @@ export class Game {
 		// this.LoadingManager.setScene(this._scene)
 		// this.LoadingManager.loadThemAll()
 
-		// this.addVRButton();
-		// console.log(VRButton)
+		this.addVRButton();
+		console.log(VRButton)
 
 		this.addEventsListeners();
 		
@@ -76,7 +76,7 @@ export class Game {
 		console.log('game _START')
 	};
 	addVRButton = () => {
-		// document.body.appendChild(VRButton.createButton(_scene.renderer));
+		document.body.appendChild(VRButton.createButton(_scene.renderer));
 	};
 	addEventsListeners = () => {
 		window.addEventListener("resize", () => {

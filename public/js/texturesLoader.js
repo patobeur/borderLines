@@ -10,8 +10,13 @@ export const _texturesLoader = {
 		{ name: 'front', shapeType: 'cube',  path: './textures/', fileName: 'front.png'},
 		{ name: 'back', shapeType: 'sphere', path: './textures/', fileName: 'back.png' },
 		{ name: 'support', shapeType: 'capsule', path: './textures/', fileName: 'support.png' },
-		{ name: 'side', path: './textures/', fileName: 'side.png' },
-		{ name: 'top', path: './textures/', fileName: 'top.png' },
+		// { name: 'side', path: './textures/', fileName: 'side.png' },
+		// { name: 'top', path: './textures/', fileName: 'top.png' },
+		// { name: 'Stone_Floor_Occlusion', path: './textures/stone/', fileName: 'Stylized_Stone_Floor_005_ambientOcclusion.jpg' },
+		// { name: 'Stone_Floor_basecolor', path: './textures/stone/', fileName: 'Stylized_Stone_Floor_005_basecolor.jpg' },
+		// { name: 'Stone_Floor_height', path: './textures/stone/', fileName: 'Stylized_Stone_Floor_005_height.png' },
+		// { name: 'Stone_Floor_normal', path: './textures/stone/', fileName: 'Stylized_Stone_Floor_005_normal.jpg' },
+		// { name: 'Stone_Floor_roughness', path: './textures/stone/', fileName: 'Stylized_Stone_Floor_005_roughness.jpg' },
 	],
 	init: function (callbackFunction) {
 		this.callbackFunction = callbackFunction
