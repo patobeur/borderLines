@@ -21,7 +21,8 @@ const io = new Server(expressServer, {
 	cors: {
 		origin: process.env.NODE_ENV === "production" ? false : [
 			"http://localhost:5500",
-			"http://127.0.0.1:5500"
+			"http://127.0.0.1:5500",
+			"http://192.168.1.105:5500"
 		]
 	}
 })
@@ -42,15 +43,15 @@ let socketing = {
 				`[${UsersState.getTime()}][${this.prevRoom}][Server] ${name} has left the room`
 			)
 			// remove player for all users in prevroom
-			io.to(this.prevRoom).emit(
-				'removePlayerFromRoom',
-				{id:id,name:name}
-			)
-			// remove player in prevroom
-			this.socket.emit(
-				'removePlayerFromRoom',
-				{id:id,name:name}
-			)
+			// io.to(this.prevRoom).emit(
+			// 	'removePlayerFromRoom',
+			// 	{id:id,name:name}
+			// )
+			// // remove player in prevroom
+			// this.socket.emit(
+			// 	'removePlayerFromRoom',
+			// 	{id:id,name:name}
+			// )
 			this.updatePrevRoomUserList()
 		}
 	},
