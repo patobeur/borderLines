@@ -6,7 +6,6 @@ import { _model } from "./js/models.js";
 // class
 // later
 // import { LoadingManager } from "./mecanics/LoadingManager.js";
-import { Controls } from "./js/Controls.js";
 
 // functions
 // import { _cubes } from "./js/cubes.js";
@@ -56,7 +55,6 @@ export class Game {
 
 
 		_stats.init()
-		this.Controls = new Controls();
 		_scene.init();
 
 		// later
@@ -124,7 +122,7 @@ export class Game {
 		// this.Controls._get_intersectionColorChange()
 
 		// PLAYER CUBE UPDATE
-		if (_players.player) _players.player.mesh.checkControls(this.Controls);
+		if (_players.player) _players.player.update();
 
 
 		// vr

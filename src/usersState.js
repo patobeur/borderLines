@@ -33,10 +33,11 @@ export const UsersState = {
 	},
 	activateUserInNewRoom: function (id, name, couleur, room, modelDatas) {
 		let datas = {
-			pos : {x:0,y:0,z:0},
+			pos : {x:0,y:0,z:3},
 			lastTime : this.getTime(),
 			couleur: couleur,
-			conf: modelDatas
+			conf: modelDatas,
+			status: {falling:false}
 		}
 		let birth= this.getDateTime();
 		const user = { id, name, couleur, room, birth, datas}
@@ -69,7 +70,4 @@ export const UsersState = {
 	getAllActiveRooms: function () {
 		return Array.from(new Set(this.users.map(user => user.room)))
 	}
-
-
-
 }

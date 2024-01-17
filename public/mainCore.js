@@ -50,12 +50,12 @@ export let Core = {
 
 		_texturesLoader.init((callbackDatas)=>{
 			console.log(callbackDatas)
-			this.init2()
+			this.initStep2()
 		})
 	},
 	//---------------------
 	//---------------------
-	init2: function () {
+	initStep2: function () {
 		this.GAME.init({
 			callBackFunction: {
 				sendPlayerDatas: (player) => {

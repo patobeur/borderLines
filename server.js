@@ -3,9 +3,18 @@ import { Server } from "socket.io"
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { UsersState } from './src/usersState.js'
+import { getLocalIpAddress } from './src/serverTools.js'; // Import de la fonction
+
+// import fs from 'fs';
+// import https from 'https';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+// const httpsOptions = {
+//     key: fs.readFileSync(path.join(__dirname, 'chemin_vers_key.key')),
+//     cert: fs.readFileSync(path.join(__dirname, 'chemin_vers_cert.crt'))
+// };
 
 const PORT = process.env.PORT || 3500
 const ADMIN = "Admin"
@@ -14,15 +23,34 @@ const app = express()
 
 app.use(express.static(path.join(__dirname, "public")))
 
+// const expressServer = https.createServer(httpsOptions, app);
+
+// expressServer.listen(PORT, () => {
+//     console.log(`listening on port ${PORT}`);
+//     console.log(`IP pour se connecter en local : https://${getLocalIpAddress()}:${PORT}`);
+// });
 const expressServer = app.listen(PORT, () => {
-	console.log(`listening on port ${PORT}`)
-})
+// \x1b[31m : Rouge
+// \x1b[32m : Vert
+// \x1b[34m : Bleu
+// \x1b[33m : jaune
+// \x1b[0m : Réinitialisation de la couleur
+	const serveurInfo = getLocalIpAddress()
+    console.log(`________________________________________`);
+    console.log(`listening on port \x1b[31m${PORT}\x1b[0m`);
+    console.log(`LOCAL http://127.0.0.1:\x1b[31m5500\x1b[33m/public/index.html\x1b[0m`);
+	// console.log(`\x1b[33mhttp://${getLocalIpAddress()}:${PORT}\x1b[0m`); 
+	console.log(`${serveurInfo.name} \x1b[33mLAN:\x1b[32m http://${serveurInfo.iface.address}:${PORT}\x1b[0m`);
+	console.log(`\x1b[31mTest:\x1b[34m https://${serveurInfo.iface.address}:${PORT}\x1b[0m`);
+    console.log(`________________________________________`);
+});
+
 const io = new Server(expressServer, {
 	cors: {
 		origin: process.env.NODE_ENV === "production" ? false : [
-			"http://localhost:5500",
-			"http://127.0.0.1:5500",
-			"http://192.168.1.105:5500"
+			"http://localhost:5501",
+			"http://127.0.0.1:5501",
+			"http://192.168.1.105:5501"
 		]
 	}
 })
@@ -42,16 +70,7 @@ let socketing = {
 				'message', 
 				`[${UsersState.getTime()}][${this.prevRoom}][Server] ${name} has left the room`
 			)
-			// remove player for all users in prevroom
-			// io.to(this.prevRoom).emit(
-			// 	'removePlayerFromRoom',
-			// 	{id:id,name:name}
-			// )
-			// // remove player in prevroom
-			// this.socket.emit(
-			// 	'removePlayerFromRoom',
-			// 	{id:id,name:name}
-			// )
+			
 			this.updatePrevRoomUserList()
 		}
 	},
@@ -130,7 +149,7 @@ io.on('connection', (socket) => {
 
 	// newuserposition
 	socket.on('newuserposition', (data) => {
-		console.log('newuserposition',data.name, data.pos)
+		console.log('server send newuserposition',data.name, data.pos)
 		const pos = data.pos;
 		const other = data.other;
 		// const name = data.name;
@@ -175,6 +194,7 @@ io.on('connection', (socket) => {
 	// Listening for a message event 
 	socket.on('sendPlayerMessageToRoom', (datas) => {
 		datas.socketId=socket.id
+
 		socketing.sendPlayerMessageToRoom(datas)
 	})
 
@@ -182,6 +202,7 @@ io.on('connection', (socket) => {
 	socket.on('activity', (name) => {
 		const room = UsersState.getUser(socket.id)?.room
 
+		console.log('activity',UsersState.getUser(socket.id))
 		if (room) {
 			const paquet = {
 				name: name,
