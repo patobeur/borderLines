@@ -46,8 +46,23 @@ less than before but still a lot of missing functionalities ...
         }
     }
 
+### ip connection set ( server side )
 
-### Front imports ( client side )
+server.js
+
+    const io = new Server(expressServer, {
+        cors: {
+            origin: process.env.NODE_ENV === "production" ? false : [
+                "http://localhost:5501",
+                "http://127.0.0.1:5501"
+            ]
+        }
+    })
+
+- [ ] server need to be standAlone as client
+
+
+### CLIENT SIDE -> Front imports 
 
     <script type="importmap">{
         "imports": {
@@ -61,23 +76,8 @@ less than before but still a lot of missing functionalities ...
 
 - [ ] client need to be standAlone as server
 
-### ip connection set ( server side )
 
-server.js
-
-    const io = new Server(expressServer, {
-        cors: {
-            origin: process.env.NODE_ENV === "production" ? false : [
-                "http://localhost:5500",
-                "http://127.0.0.1:5500"
-            ]
-        }
-    })
-
-- [ ] server need to be standAlone as client
-
-
-### add your local ip to *main.js* ( client side )
+### CLIENT SIDE -> add your local server ip to *main.js* 
 
     import { Core } from "./mainCore.js";
-    Core.init({socket:io('ws://192.168.17.125:3500')})
+    Core.init({socket:io('ws://192.xxx.xxx.xxx:3500')})
